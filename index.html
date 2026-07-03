@@ -20,7 +20,7 @@
 
         .page { margin-bottom: 30px; }
         .section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
-        .date-display { font-size: 0.9em; color: #666; }
+        .date-display { font-size: 0.7em; color: #666; }
         
         h2.section-title { font-size: 1.2em; margin: 10px 0 !important; }
         
@@ -28,79 +28,26 @@
         th, td { border: 1px solid #aaa; height: 30px; text-align: center; font-size: 11px; padding: 1px; position: relative; }
         th { background: #eee; }
         
-        .name-header{
-            overflow-wrap: break-word;
-            word-break: break-all;
-            line-height: 1.1;
-            font-size: 11px;
-            overflow: hidden;
-            font-weight: normal;
-        }
-        
-        .diagonal-line {
-            background: #eee;
-            background-image: linear-gradient(
-                to top right,
-                transparent 49%,
-                #666 50%,
-                #666 51%,
-                transparent 52%
-            );
-        }
-
+        .name-header{ overflow-wrap: break-word; word-break: break-all; line-height: 1.1; font-size: 11px; overflow: hidden; font-weight: normal; }
+        .diagonal-line { background: #eee; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%); }
         .match-num-col { width: 35px; }
         .match-num { position: absolute; top: 1px; left: 2px; font-size: 7px; color: #888; line-height: 1; }
-
-        .match-list-container {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
+        .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 20px; }
         .match-list-column { flex: 1; min-width: 100%; }
-
         .print-only { display: none; }
 
         @media print {
-            @page { size: A4 portrait; margin: 8mm; }
+          h2.section-title {
+        font-size: 10pt !important; /* 印刷時のみの指定も可能 */
+    }
+            @page { size: A4 portrait; margin: 3mm 5mm 1mm 5mm; }
             .no-print { display: none; }
-            .page { page-break-after: always; margin-bottom: 0; }
-            .page:last-child { page-break-after: avoid; }
             
-            .match-num {
-                color: #666 !important;
-                font-size: 9px !important;
-                top: 4px; 
-                left: 4px;
-            }
-
-            .page table th {
-                background-color: #eee !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .page table {
-                margin: 0 auto;
-                border-collapse: separate !important;
-                border-spacing: 0 !important;
-                border-left: 1px solid #333;
-                border-top: 1px solid #333;
-            }
-
-            .page table th,
-            .page table td {
-                border: 0 !important;
-                border-right: 1px solid #333 !important;
-                border-bottom: 1px solid #333 !important;
-                height: 45px !important;
-            }
-                
-            .match-list-column table th,
-            .match-list-column table td {
-                height: 45px !important;
-                font-size: 15px !important;
-            }
+            .match-num { color: #666 !important; font-size: 9px !important; top: 4px; left: 4px; }
+            .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page table { margin: 0 auto; border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; }
+            .page table th, .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 37px !important; }
+            .match-list-column table th, .match-list-column table td { height: 30px !important; font-size: 13px !important; }
 
             .page[data-n="3"] table { width: 50% !important; }
             .page[data-n="4"] table { width: 60% !important; }
@@ -111,34 +58,13 @@
             .page[data-n="9"] table { width: 100% !important; }
             .page[data-n="10"] table { width: 100% !important; }
 
-            .page[data-n="3"] .name-header,
-            .page[data-n="4"] .name-header,
-            .page[data-n="5"] .name-header{ font-size: 13px; }
-            .page[data-n="6"] .name-header,
-            .page[data-n="7"] .name-header{ font-size: 12px; }
-            .page[data-n="8"] .name-header,
-            .page[data-n="9"] .name-header,
-            .page[data-n="10"] .name-header{ font-size: 10px; }
-
             .print-only { display: table-cell !important; width: 25px !important; }
-            .diagonal-line {
-                background: #eee !important;
-                background-image: linear-gradient(
-                    to top right,
-                    transparent 49%,
-                    #666 50%,
-                    #666 51%,
-                    transparent 52%
-                ) !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
+            .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             
-            .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 25px; }
+            .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; }
             .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
             .print-col-2 { min-width: 44% !important; }
             .print-col-3 { min-width: 29% !important; }
-            .print-col-3 .match-num-col { width: 22px; }
         }
     </style>
 </head>
@@ -198,7 +124,7 @@
             }
             html += `<td class="print-only"></td><td class="print-only"></td><td class="print-only"></td><td class="print-only"></td></tr>`;
         }
-        html += `</table></div><div class='page'><h2 class="section-title">対戦順</h2><div class="match-list-container">`;
+        html += `</table><h2 class="section-title">対戦順</h2><div class="match-list-container">`;
         
         const printColClass = `print-col-${printCols}`;
         const matchesPerCol = Math.ceil(matches.length / printCols);
