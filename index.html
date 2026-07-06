@@ -41,9 +41,18 @@
 
             .no-print { display: none; }
 
+            /* ★3〜7人のときだけ余白を入れる設定 */
+            .page[data-n="3"] table,
+            .page[data-n="4"] table,
+            .page[data-n="5"] table,
+            .page[data-n="6"] table,
+            .page[data-n="7"] table { 
+                margin-bottom: 20mm !important; 
+            }
+
             .match-num { color: #666 !important; font-size: 9px !important; top: 4px; left: 4px; }
             .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .page table { margin: 0; border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; }
+            .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; }
             .page table th, .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 37px !important; }
             .match-list-column table th, .match-list-column table td { height: 30px !important; font-size: 13px !important; }
 
