@@ -57,14 +57,23 @@
             .page[data-n="8"] table { width: 95% !important; }
             .page[data-n="9"] table { width: 100% !important; }
             .page[data-n="10"] table { width: 100% !important; }
-            /* 10人の場合、対戦順の表の文字サイズを小さくする */
+            /* 9人の場合、対戦順の表の文字サイズを小さくする */
+    .page[data-n="9"] .match-list-column table {
+        font-size: 13px !important;
+    }
+    
+    /* 念のため、9人の場合だけ対戦順の行の高さも少し詰める */
+    .page[data-n="9"] .match-list-column table td {
+        height: 26px !important;
+    }
+          /* 10人の場合、対戦順の表の文字サイズを小さくする */
     .page[data-n="10"] .match-list-column table {
         font-size: 11px !important;
     }
     
     /* 念のため、10人の場合だけ対戦順の行の高さも少し詰める */
     .page[data-n="10"] .match-list-column table td {
-        height: 23px !important;
+        height: 22px !important;
     }
           
 
