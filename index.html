@@ -86,16 +86,32 @@
         body.share-mode .page { margin-bottom: 0 !important; }
         body.share-mode .section-header { margin-bottom: 1px !important; }
         
-        body.share-mode .page table th, body.share-mode .page table td { height: 21px !important; font-size: 9px !important; padding: 0 !important; }
+        /* デフォルトの一括縮小（7人以上用） */
+        body.share-mode .page[data-n="7"] table th, body.share-mode .page[data-n="7"] table td,
+        body.share-mode .page[data-n="8"] table th, body.share-mode .page[data-n="8"] table td,
+        body.share-mode .page[data-n="9"] table th, body.share-mode .page[data-n="9"] table td,
+        body.share-mode .page[data-n="10"] table th, body.share-mode .page[data-n="10"] table td { height: 21px !important; font-size: 9px !important; padding: 0 !important; }
+
         body.share-mode .match-list-column table th, body.share-mode .match-list-column table td { height: 19px !important; font-size: 9px !important; padding: 0 !important; }
         
-        /* 3〜7人のときの高さ指定 */
+        /* 3〜6人のときはプレビューでも縮小せず、通常サイズを維持する設定 */
+        body.share-mode .page[data-n="3"] table th, body.share-mode .page[data-n="3"] table td,
+        body.share-mode .page[data-n="4"] table th, body.share-mode .page[data-n="4"] table td,
+        body.share-mode .page[data-n="5"] table th, body.share-mode .page[data-n="5"] table td,
+        body.share-mode .page[data-n="6"] table th, body.share-mode .page[data-n="6"] table td {
+            height: 30px !important;
+            font-size: 11px !important;
+            padding: 1px !important;
+        }
+
+        /* 3〜7人の対戦順表の高さ指定 */
         body.share-mode .page[data-n="3"] .match-list-column table th, body.share-mode .page[data-n="3"] .match-list-column table td,
         body.share-mode .page[data-n="4"] .match-list-column table th, body.share-mode .page[data-n="4"] .match-list-column table td,
         body.share-mode .page[data-n="5"] .match-list-column table th, body.share-mode .page[data-n="5"] .match-list-column table td,
         body.share-mode .page[data-n="6"] .match-list-column table th, body.share-mode .page[data-n="6"] .match-list-column table td,
         body.share-mode .page[data-n="7"] .match-list-column table th, body.share-mode .page[data-n="7"] .match-list-column table td {
             height: 30px !important;
+            font-size: 12px !important;
         }
 
         /* 8人のときの高さ指定 */
@@ -111,14 +127,14 @@
         body.share-mode .page[data-n="9"] table th, body.share-mode .page[data-n="9"] table td,
         body.share-mode .page[data-n="10"] table th, body.share-mode .page[data-n="10"] table td { height: 18px !important; font-size: 8px !important; }
         
-        /* ★ 9人の対戦順表の高さ指定（ここを変更すると9人だけ変わります） */
+        /* ★ 9人の対戦順表の高さ指定 */
         body.share-mode .page[data-n="9"] .match-list-column table th, 
         body.share-mode .page[data-n="9"] .match-list-column table td { 
             height: 30px !important; 
             font-size: 9px !important; 
         }
 
-        /* ★ 10人の対戦順表の高さ指定（ここを変更すると10人だけ変わります） */
+        /* ★ 10人の対戦順表の高さ指定 */
         body.share-mode .page[data-n="10"] .match-list-column table th, 
         body.share-mode .page[data-n="10"] .match-list-column table td { 
             height: 23px !important; 
