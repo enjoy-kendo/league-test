@@ -144,7 +144,6 @@
                 height: 37px !important;
                 font-size: 14px !important;
             }
-            /* 9人・10人のとき専用の文字サイズ調整 */
             body.print-match-only-9 #print-match-only-area td:first-child {
                 font-size: 11px !important;
             }
@@ -232,7 +231,6 @@
             if (n >= 6 && n <= 8) printCols = 2;
             else if (n >= 9) printCols = 3;
 
-            // メイン画面用のHTML構築
             let html = `<div class="page" data-n="${n}">` +
                        `<div class="section-header"><h2 class="section-title">対戦表（${n}人・${matches.length}試合）</h2><div class="date-display">${dateStr}</div></div>` +
                        `<table><tr><th></th>`;
@@ -266,7 +264,6 @@
 
             document.getElementById('output').innerHTML = html;
 
-            // 「対戦順だけ印刷」専用エリアにも同じ対戦順リストを自動生成してセット
             let printOnlyHtml = `<h2>対戦順</h2><div class="match-list-container">`;
             for (let c = 0; c < printCols; c++) {
                 printOnlyHtml += `<div class="match-list-column ${printColClass}"><table><tr><th class="match-num-col"></th><th>赤</th><th>白</th></tr>`;
@@ -286,15 +283,21 @@
 
         function printMatchOnly() {
             const n = document.getElementById('output').querySelector('.page').getAttribute('data-n');
+            
+            // クラスを付与
             document.body.classList.add('print-match-only');
             if (n === '9') document.body.classList.add('print-match-only-9');
             if (n === '10') document.body.classList.add('print-match-only-10');
 
-            window.print();
-
+            // スマホの描画反映を待つため少し遅らせてからprint()を呼ぶ
             setTimeout(() => {
-                document.body.classList.remove('print-match-only', 'print-match-only-9', 'print-match-only-10');
-            }, 500);
+                window.print();
+                
+                // 印刷画面が閉じられたらクラスを元に戻す
+                setTimeout(() => {
+                    document.body.classList.remove('print-match-only', 'print-match-only-9', 'print-match-only-10');
+                }, 500);
+            }, 100);
         }
 
         function enterShareMode() {
