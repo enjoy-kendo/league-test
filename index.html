@@ -29,7 +29,7 @@
         /* セクションタイトルのスタイル */
         h2.section-title { font-size: 1.2em; margin: 10px 0 !important; }
 
-        /* 💡 通常画面側の「対戦順」タイトルの上のスペースを広くしました */
+        /* 通常画面側の「対戦順」タイトルの上のスペースを広くしました */
         .page h2.match-list-title { margin-top: 20px !important; }
 
         /* テーブル共通のスタイル */
@@ -80,8 +80,8 @@
         .back-btn-area { display: none; }
 
         /* ==========================================
-           共有画面モード（プレビュー画面）のスタイル
-           ========================================== */
+            共有画面モード（プレビュー画面）のスタイル
+            ========================================== */
         body.share-mode { padding: 2px !important; }
         body.share-mode .no-print { display: none !important; }
         body.share-mode .back-btn-area { display: block !important; margin-bottom: 2px !important; }
@@ -111,8 +111,8 @@
         body.share-mode .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; }
 
         /* ==========================================
-           実際の印刷時の設定（完全固定・絶対に崩さない）
-           ========================================== */
+            実際の印刷時の設定
+            ========================================== */
         @media print {
             .page {
                 margin-top: 0 !important;
@@ -177,6 +177,31 @@
             .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
             .print-col-2 { min-width: 44% !important; }
             .print-col-3 { min-width: 29% !important; }
+
+            /* 対戦順だけ印刷モード用のスタイル設定 */
+            body.print-match-only .page > *:not(.match-list-title):not(.match-list-container):not(.section-header) {
+                display: none !important;
+            }
+            body.print-match-only .page table th, 
+            body.print-match-only .page table td {
+                height: 37px !important;
+                font-size: 14px !important;
+            }
+            /* 9人と10人のときだけ対戦番号の列の文字を小さくする設定 */
+            body.print-match-only .page[data-n="9"] .match-list-column td:first-child,
+            body.print-match-only .page[data-n="10"] .match-list-column td:first-child {
+                font-size: 11px !important;
+            }
+            body.print-match-only .page[data-n="9"] .match-list-column table th, 
+            body.print-match-only .page[data-n="9"] .match-list-column table td,
+            body.print-match-only .page[data-n="10"] .match-list-column table th, 
+            body.print-match-only .page[data-n="10"] .match-list-column table td {
+                height: 48px !important;
+                font-size: 15px !important;
+            }
+            body.print-match-only .page h2.match-list-title {
+                margin-top: 5px !important;
+            }
         }
     </style>
 </head>
@@ -191,6 +216,7 @@
         </div>
         <button onclick="generate()">表を作成</button>
         <button id="printBtn" onclick="window.print()" disabled style="background-color: #6c757d;">印刷する</button>
+        <button id="printMatchBtn" onclick="printMatchOnly()" disabled style="background-color: #6c757d;">対戦順だけ印刷する</button>
     </div>
 
     <!-- 共有画面から戻るためのボタン（共有モード時のみ表示） -->
@@ -273,6 +299,14 @@
             document.getElementById('output').innerHTML = html;
             document.getElementById('printBtn').disabled = false;
             document.getElementById('printBtn').style.backgroundColor = '#6c757d';
+            document.getElementById('printMatchBtn').disabled = false;
+            document.getElementById('printMatchBtn').style.backgroundColor = '#17a2b8';
+        }
+
+        function printMatchOnly() {
+            document.body.classList.add('print-match-only');
+            window.print();
+            document.body.classList.remove('print-match-only');
         }
 
         function enterShareMode() {
