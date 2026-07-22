@@ -28,8 +28,6 @@
 
         /* セクションタイトルのスタイル */
         h2.section-title { font-size: 1.2em; margin: 10px 0 !important; }
-
-        /* 通常画面側の「対戦順」タイトルの上のスペースを広くしました */
         .page h2.match-list-title { margin-top: 20px !important; }
 
         /* テーブル共通のスタイル */
@@ -42,20 +40,17 @@
         /* 自分自身の対戦マスの斜線スタイル */
         .diagonal-line { background: #eee; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%); }
         
-        /* 画面・プレビュー用：対戦順リストの対戦番号列の幅（3〜8人は24px） */
+        /* 対戦順リストの対戦番号列の幅 */
         .match-list-column .match-num-col { width: 24px !important; }
         .match-list-column td:first-child { width: 24px !important; }
 
-        /* 9人・10人のときだけ対戦番号列の幅を15pxにする（画面・プレビュー用） */
         .page[data-n="9"] .match-list-column .match-num-col,
         .page[data-n="10"] .match-list-column .match-num-col,
         .page[data-n="9"] .match-list-column td:first-child,
         .page[data-n="10"] .match-list-column td:first-child { width: 15px !important; }
 
-        /* マス目の中央に表示する対戦番号のスタイル（画面用） */
         .match-num { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #888; text-align: center; width: 100%; pointer-events: none; }
         
-        /* 対戦順リストのコンテナ（画面・プレビュー共通で横並び） */
         .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 12px; }
         .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
         .print-col-2 { min-width: 44% !important; flex: 1; }
@@ -86,76 +81,91 @@
         body.share-mode .no-print { display: none !important; }
         body.share-mode .back-btn-area { display: block !important; margin-bottom: 2px !important; }
         body.share-mode h2.section-title { font-size: 9pt !important; margin: 1px 0 !important; }
-        
         body.share-mode .page h2.match-list-title { margin-top: 20px !important; }
         body.share-mode .match-num { color: #888 !important; font-size: 10px !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; }
         body.share-mode .page { margin-bottom: 0 !important; }
         body.share-mode .section-header { margin-bottom: 1px !important; }
-        
         body.share-mode .page table th, body.share-mode .page table td { height: 21px !important; font-size: 9px !important; padding: 0 !important; }
         body.share-mode .match-list-column table th, body.share-mode .match-list-column table td { height: 19px !important; font-size: 9px !important; padding: 0 !important; }
-        
         body.share-mode .match-list-container { gap: 10px !important; }
         body.share-mode .print-col-3 { min-width: 31% !important; max-width: 32% !important; }
-
         body.share-mode .page[data-n="9"] table th, body.share-mode .page[data-n="9"] table td,
         body.share-mode .page[data-n="10"] table th, body.share-mode .page[data-n="10"] table td { height: 18px !important; font-size: 8px !important; }
-        
         body.share-mode .page[data-n="9"] .match-list-column table th, body.share-mode .page[data-n="9"] .match-list-column table td,
         body.share-mode .page[data-n="10"] .match-list-column table th, body.share-mode .page[data-n="10"] .match-list-column table td { height: 21px !important; font-size: 9px !important; }
-
         body.share-mode .print-only { display: none !important; }
         body.share-mode .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; }
 
         /* ==========================================
-            実際の印刷時の設定
+            通常の印刷設定
             ========================================== */
         @media print {
             .page { margin-top: 0 !important; }
-
             h2.section-title { font-size: 9pt !important; margin-top: 3px !important; margin-bottom: 0px !important; }
-            .page h2.match-list-title { font-size: 9pt !important; margin-top: 5px !important; margin-bottom: 3px !important; }
-
+            .page h2.match-list-title { font-size: 9pt !important; margin-top: 30px !important; margin-bottom: 3px !important; }
             @page { size: A4 portrait; margin: 2mm 5mm 1mm 5mm; }
             .no-print, .back-btn-area { display: none !important; }
-            
             .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
 
-            .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; }
-            .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
-            .print-col-2 { min-width: 44% !important; }
-            .print-col-3 { min-width: 29% !important; }
+        /* ==========================================
+            「対戦順だけ印刷」専用の隠し印刷エリア
+            ========================================== */
+        #print-match-only-area { display: none; }
 
-            /* ==========================================
-               対戦順だけ印刷モード（CSSで確実に制御）
-               ========================================== */
-            body.print-match-only .main-table,
-            body.print-match-only .main-table-title,
-            body.print-match-only .date-display {
+        @media print {
+            body.print-match-only > *:not(#print-match-only-area) {
                 display: none !important;
             }
-
-            body.print-match-only .page table th, 
-            body.print-match-only .page table td {
+            body.print-match-only #print-match-only-area {
+                display: block !important;
+            }
+            #print-match-only-area h2 {
+                font-size: 11pt !important;
+                margin: 0 0 5px 0 !important;
+            }
+            #print-match-only-area table {
+                border-collapse: collapse !important;
+                width: 100% !important;
+            }
+            #print-match-only-area th, #print-match-only-area td {
+                border: 1px solid #333 !important;
+                text-align: center !important;
+                padding: 1px !important;
+            }
+            #print-match-only-area th {
+                background-color: #eee !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            #print-match-only-area .match-list-column table th, 
+            #print-match-only-area .match-list-column table td {
                 height: 37px !important;
                 font-size: 14px !important;
-                border: 1px solid #333 !important;
             }
-
-            /* 9人・10人のときだけ対戦番号の列の文字を小さくする設定 */
-            body.print-match-only .page[data-n="9"] .match-list-column td:first-child,
-            body.print-match-only .page[data-n="10"] .match-list-column td:first-child {
+            /* 9人・10人のとき専用の文字サイズ調整 */
+            body.print-match-only-9 #print-match-only-area td:first-child {
                 font-size: 11px !important;
             }
-            body.print-match-only .page[data-n="9"] .match-list-column table th, 
-            body.print-match-only .page[data-n="9"] .match-list-column table td,
-            body.print-match-only .page[data-n="10"] .match-list-column table th, 
-            body.print-match-only .page[data-n="10"] .match-list-column table td {
+            body.print-match-only-9 #print-match-only-area table th, 
+            body.print-match-only-9 #print-match-only-area table td {
                 height: 48px !important;
                 font-size: 15px !important;
             }
-            body.print-match-only .page h2.match-list-title {
-                margin-top: 5px !important;
+            body.print-match-only-10 #print-match-only-area td:first-child {
+                font-size: 11px !important;
+            }
+            body.print-match-only-10 #print-match-only-area table th, 
+            body.print-match-only-10 #print-match-only-area table td {
+                height: 48px !important;
+                font-size: 15px !important;
+            }
+            #print-match-only-area .match-list-container {
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                gap: 10px !important;
             }
         }
     </style>
@@ -181,6 +191,9 @@
 
     <!-- 生成された対戦表が表示されるエリア -->
     <div id="output"></div>
+
+    <!-- 対戦順だけ印刷するための独立したコンテナ -->
+    <div id="print-match-only-area"></div>
 
     <script>
         const LEAGUE_TABLES = {
@@ -219,9 +232,10 @@
             if (n >= 6 && n <= 8) printCols = 2;
             else if (n >= 9) printCols = 3;
 
+            // メイン画面用のHTML構築
             let html = `<div class="page" data-n="${n}">` +
-                       `<div class="section-header"><h2 class="section-title main-table-title">対戦表（${n}人・${matches.length}試合）</h2><div class="date-display">${dateStr}</div></div>` +
-                       `<table class="main-table"><tr><th></th>`;
+                       `<div class="section-header"><h2 class="section-title">対戦表（${n}人・${matches.length}試合）</h2><div class="date-display">${dateStr}</div></div>` +
+                       `<table><tr><th></th>`;
             names.forEach(name => html += `<th class="name-header">${name}</th>`);
             html += `</tr>`;
 
@@ -251,6 +265,19 @@
                     `</div>`;
 
             document.getElementById('output').innerHTML = html;
+
+            // 「対戦順だけ印刷」専用エリアにも同じ対戦順リストを自動生成してセット
+            let printOnlyHtml = `<h2>対戦順</h2><div class="match-list-container">`;
+            for (let c = 0; c < printCols; c++) {
+                printOnlyHtml += `<div class="match-list-column ${printColClass}"><table><tr><th class="match-num-col"></th><th>赤</th><th>白</th></tr>`;
+                const colMatches = matches.slice(c * matchesPerCol, (c + 1) * matchesPerCol);
+                colMatches.forEach(m => printOnlyHtml += `<tr><td>${m.num}</td><td>${m.p1}</td><td>${m.p2}</td></tr>`);
+                printOnlyHtml += `</table></div>`;
+            }
+            printOnlyHtml += `</div>`;
+            document.getElementById('print-match-only-area').innerHTML = printOnlyHtml;
+            document.getElementById('print-match-only-area').setAttribute('data-n', n);
+
             document.getElementById('printBtn').disabled = false;
             document.getElementById('printBtn').style.backgroundColor = '#6c757d';
             document.getElementById('printMatchBtn').disabled = false;
@@ -258,11 +285,15 @@
         }
 
         function printMatchOnly() {
+            const n = document.getElementById('output').querySelector('.page').getAttribute('data-n');
             document.body.classList.add('print-match-only');
+            if (n === '9') document.body.classList.add('print-match-only-9');
+            if (n === '10') document.body.classList.add('print-match-only-10');
+
             window.print();
-            // 印刷ダイアログが閉じられたらモードを解除
+
             setTimeout(() => {
-                document.body.classList.remove('print-match-only');
+                document.body.classList.remove('print-match-only', 'print-match-only-9', 'print-match-only-10');
             }, 500);
         }
 
