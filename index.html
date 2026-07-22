@@ -89,9 +89,12 @@
         body.share-mode .page table th, body.share-mode .page table td { height: 21px !important; font-size: 9px !important; padding: 0 !important; }
         body.share-mode .match-list-column table th, body.share-mode .match-list-column table td { height: 19px !important; font-size: 9px !important; padding: 0 !important; }
         
-        /* ★ 7人のときの対戦順表の縦を長くするための指定（お好みで高さを微調整できます） */
-        body.share-mode .page[data-n="7"] .match-list-column table th,
-        body.share-mode .page[data-n="7"] .match-list-column table td {
+        /* ★ 3〜7人のときの対戦順表の縦を長くするための指定 */
+        body.share-mode .page[data-n="3"] .match-list-column table th, body.share-mode .page[data-n="3"] .match-list-column table td,
+        body.share-mode .page[data-n="4"] .match-list-column table th, body.share-mode .page[data-n="4"] .match-list-column table td,
+        body.share-mode .page[data-n="5"] .match-list-column table th, body.share-mode .page[data-n="5"] .match-list-column table td,
+        body.share-mode .page[data-n="6"] .match-list-column table th, body.share-mode .page[data-n="6"] .match-list-column table td,
+        body.share-mode .page[data-n="7"] .match-list-column table th, body.share-mode .page[data-n="7"] .match-list-column table td {
             height: 25px !important;
         }
         
