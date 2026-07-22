@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>リーグ戦対戦表</title>
-    
-    <!-- html2canvasライブラリの読み込み -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
     <style>
         /* ページ全体とベースの文字設定 */
         body { font-family: sans-serif; padding: 8px; margin: 0; background-color: #fff; color: #333; }
@@ -21,16 +17,9 @@
         .form-group label { display: block; font-weight: bold; margin-bottom: 2px; font-size: 0.9em; }
         .form-group textarea { width: 100%; padding: 8px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; height: 200px; }
 
-        /* ボタンを並べるエリアのスタイル */
-        .button-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
         /* ボタン共通スタイル */
         button { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; background-color: #007bff; color: white; font-weight: bold; font-size: 14px; }
-        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        button:disabled { background-color: #ccc; }
 
         /* 各ページコンテナのスタイル */
         .page { margin-bottom: 30px; }
@@ -63,42 +52,18 @@
             font-size: 13px !important;
             height: 38px !important;
         }
-        /* 画面表示時、印刷用列（勝負分順位）は非表示 */
+        /* 印刷時のみ表示する列の初期設定（画面では非表示） */
         .print-only { display: none; }
 
-        /* ▼ 印刷時、およびスクショ撮影時にのみ適用されるレイアウト指定 */
-        .print-layout-active h2.section-title { font-size: 10pt !important; }
-        .print-layout-active .match-num { color: #666 !important; font-size: 7px !important; top: 4px; left: 5px; transform: none !important; }
-        .print-layout-active .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        .print-layout-active .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; }
-        .print-layout-active .page table th, .print-layout-active .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 37px !important; }
-        .print-layout-active .match-list-column table th, .print-layout-active .match-list-column table td { height: 30px !important; font-size: 13px !important; }
-
-        /* 人数に応じた対戦表の幅の調整（スクショ・印刷用） */
-        .print-layout-active .page[data-n="3"] table { width: 50% !important; }
-        .print-layout-active .page[data-n="4"] table { width: 60% !important; }
-        .print-layout-active .page[data-n="5"] table { width: 70% !important; }
-        .print-layout-active .page[data-n="6"] table { width: 80% !important; }
-        .print-layout-active .page[data-n="7"] table { width: 90% !important; }
-        .print-layout-active .page[data-n="8"] table { width: 95% !important; }
-        .print-layout-active .page[data-n="9"] table { width: 100% !important; }
-        .print-layout-active .page[data-n="10"] table { width: 100% !important; }
-
-        .print-layout-active .print-only { display: table-cell !important; width: 25px !important; }
-        .print-layout-active .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-
-        .print-layout-active .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; }
-        .print-layout-active .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
-        .print-layout-active .print-col-2 { min-width: 44% !important; }
-        .print-layout-active .print-col-3 { min-width: 29% !important; }
-
-        /* ▼ 実際の印刷時（window.print用）の設定 */
+        /* 印刷時のスタイル設定 */
         @media print {
+            h2.section-title { font-size: 10pt !important; }
             @page { size: A4 portrait; margin: 3mm 5mm 1mm 5mm; }
+
+            /* 印刷時にフォームエリアを非表示にする */
             .no-print { display: none; }
-            body { background-color: #fff; }
-            /* 印刷時は強制的にレイアウトクラスを適用 */
-            #output { }
+
+            /* 参加者人数（3〜7人）に応じた余白調整 */
             .page[data-n="3"] table,
             .page[data-n="4"] table,
             .page[data-n="5"] table,
@@ -106,6 +71,36 @@
             .page[data-n="7"] table { 
                 margin-bottom: 20mm !important; 
             }
+
+            .match-num { color: #666 !important; font-size: 7px !important; top: 4px; left: 5px; }
+            .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; }
+            .page table th, .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 37px !important; }
+            .match-list-column table th, .match-list-column table td { height: 30px !important; font-size: 13px !important; }
+
+            /* 人数に応じた対戦表の幅の調整 */
+            .page[data-n="3"] table { width: 50% !important; }
+            .page[data-n="4"] table { width: 60% !important; }
+            .page[data-n="5"] table { width: 70% !important; }
+            .page[data-n="6"] table { width: 80% !important; }
+            .page[data-n="7"] table { width: 90% !important; }
+            .page[data-n="8"] table { width: 95% !important; }
+            .page[data-n="9"] table { width: 100% !important; }
+            .page[data-n="10"] table { width: 100% !important; }
+
+            /* 9人・10人の場合の対戦リストの文字サイズと高さ調整 */
+            .page[data-n="9"] .match-list-column table { font-size: 13px !important; }
+            .page[data-n="9"] .match-list-column table td { height: 26px !important; }
+            .page[data-n="10"] .match-list-column table { font-size: 11px !important; }
+            .page[data-n="10"] .match-list-column table td { height: 22px !important; }
+
+            .print-only { display: table-cell !important; width: 25px !important; }
+            .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+            .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; }
+            .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
+            .print-col-2 { min-width: 44% !important; }
+            .print-col-3 { min-width: 29% !important; }
         }
     </style>
 </head>
@@ -118,70 +113,85 @@
             <label>参加者名（3〜10人、改行区切り）</label>
             <textarea id="names" placeholder="Aさん&#10;Bさん&#10;Cさん"></textarea>
         </div>
-        <button onclick="generate()">表を作成して表示</button>
-        
-        <!-- 操作ボタンを横並びにするグループ -->
-        <div class="button-group" style="margin-top: 8px;">
-            <button id="printBtn" onclick="handlePrint()" disabled style="background-color: #6c757d;">印刷する</button>
-            <button id="screenshotBtn" disabled style="background-color: #6c757d;">スクショを撮る</button>
-        </div>
+        <button onclick="generate()">表を作成</button>
+        <button id="printBtn" onclick="printFullscreen()" disabled style="background-color: #6c757d;">印刷する</button>
     </div>
 
     <!-- 生成された対戦表が表示されるエリア -->
     <div id="output"></div>
 
     <script>
+        /* 
+         【設定：総当たり戦の対戦順マトリックス】
+         3人から10人までの各人数における対戦順序を定義しています。
+         人数を変更または拡張したい場合は、このオブジェクトに新しい行数を追加してください。
+        */
         const LEAGUE_TABLES = {
             3: [[0, 1, 3], [1, 0, 2], [3, 2, 0]],
             4: [[0, 1, 5, 3], [1, 0, 4, 6], [5, 4, 0, 2], [3, 6, 2, 0]],
             5: [[0, 1, 6, 9, 3], [1, 0, 4, 7, 10], [6, 4, 0, 2, 8], [9, 7, 2, 0, 5], [3, 10, 8, 5, 0]],
             6: [[0, 1, 12, 8, 10, 6], [1, 0, 4, 13, 7, 11], [12, 4, 0, 2, 14, 9], [8, 13, 2, 0, 5, 15], [10, 7, 14, 5, 0, 3], [6, 11, 9, 15, 3, 0]],
             7: [[0, 1, 14, 8, 20, 12, 4], [1, 0, 5, 15, 9, 19, 13], [14, 5, 0, 2, 16, 10, 21], [8, 15, 2, 0, 6, 17, 11], [20, 9, 16, 6, 0, 3, 18], [12, 19, 10, 17, 3, 0, 7], [4, 13, 21, 11, 18, 7, 0]],
-            8: [[0, 1, 17, 12, 23, 10, 27, 8], [1, 0, 5, 18, 13, 24, 9, 28], [17, 5, 0, 2, 19, 14, 25, 11], [12, 18, 2, 0, 6, 20, 15, 26], [23, 13, 19, 6, 0, 3, 21, 16], [10, 24, 14, 20, 3, 0, 7, 27], [27, 9, 25, 15, 21, 7, 0, 4], [8, 28, 11, 26, 16, 22, 4, 0]],
+            8: [[0, 1, 17, 12, 23, 10, 27, 8], [1, 0, 5, 18, 13, 24, 9, 28], [17, 5, 0, 2, 19, 14, 25, 11], [12, 18, 2, 0, 6, 20, 15, 26], [23, 13, 19, 6, 0, 3, 21, 16], [10, 24, 14, 20, 3, 0, 7, 22], [27, 9, 25, 15, 21, 7, 0, 4], [8, 28, 11, 26, 16, 22, 4, 0]],
             9: [[0, 1, 24, 10, 19, 31, 16, 35, 5], [1, 0, 6, 25, 11, 20, 32, 17, 36], [24, 6, 0, 2, 26, 12, 21, 33, 18], [10, 25, 2, 0, 7, 27, 13, 22, 34], [19, 11, 26, 7, 0, 3, 28, 14, 23], [31, 20, 12, 27, 3, 0, 8, 29, 15], [16, 32, 21, 13, 28, 8, 0, 4, 30], [35, 17, 33, 22, 14, 29, 4, 0, 9], [5, 36, 18, 34, 23, 15, 30, 9, 0]],
             10: [[0, 1, 21, 14, 29, 35, 40, 12, 44, 10], [1, 0, 6, 22, 15, 30, 36, 41, 11, 45], [21, 6, 0, 2, 23, 16, 31, 37, 42, 13], [14, 22, 2, 0, 7, 24, 17, 32, 38, 43], [29, 15, 23, 7, 0, 3, 25, 18, 33, 39], [35, 30, 16, 24, 3, 0, 8, 26, 19, 34], [40, 36, 31, 17, 25, 8, 0, 4, 27, 20], [12, 41, 37, 32, 18, 26, 4, 0, 9, 28], [44, 11, 42, 38, 33, 19, 27, 9, 0, 5], [10, 45, 13, 43, 39, 34, 20, 28, 5, 0]]
         };
 
+        /* 
+         【関数：対戦表と対戦順リストを生成するメイン処理】
+         テキストエリアから入力された参加者名を取得し、バリデーションとHTMLの組み立てを行います。
+        */
         function generate() {
+            // テキストエリアの入力値を改行ごとに分割し、前後の空白削除と空行の除外を行う
             const names = document.getElementById('names').value.split('\n').map(n => n.trim()).filter(n => n !== "");
             const n = names.length;
             
+            // 人数が3〜10人の範囲外である場合はアラートを表示して処理を中断する
             if (n < 3 || n > 10) { alert("3〜10人で入力してください"); return; }
 
+            // 現在の日付を取得し、YYYY/M/D形式の文字列に変換する
             const now = new Date();
             const dateStr = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`;
 
+            // 人数に応じた対戦マトリックスを取得
             const matrix = LEAGUE_TABLES[n];
             let matches = [];
             
+            // 全組み合わせの対戦ペアとマトリックス上の数値を抽出
             for (let i = 0; i < n; i++) {
                 for (let j = i + 1; j < n; j++) {
                     matches.push({ p1: names[i], p2: names[j], originalNum: matrix[i][j] });
                 }
             }
+            // originalNumの値をもとに昇順でソートし、通し番号（num）を割り振る
             matches.sort((a, b) => a.originalNum - b.originalNum);
             matches.forEach((m, idx) => m.num = idx + 1);
 
+            // 印刷時の対戦リストの列数を決定（6〜8人は2列、9人以上は3列、それ以外は1列）
             let printCols = 1;
             if (n >= 6 && n <= 8) printCols = 2;
             else if (n >= 9) printCols = 3;
 
+            // 対戦表のHTML構造の組み立てを開始
             let html = `<div class="page" data-n="${n}">` +
                        `<div class="section-header"><h2 class="section-title">対戦表（${n}人・${matches.length}試合）</h2><div class="date-display">${dateStr}</div></div>` +
                        `<table><tr><th></th>`;
             names.forEach(name => html += `<th class="name-header">${name}</th>`);
             html += `<th class="print-only">勝</th><th class="print-only">負</th><th class="print-only">分</th><th class="print-only">順位</th></tr>`;
 
+            // マトリックス表の行と列を描画するループ
             for (let i = 0; i < n; i++) {
                 html += `<tr><th class="name-header">${names[i]}</th>`;
                 for (let j = 0; j < n; j++) {
                     const match = matches.find(m => (m.p1 === names[i] && m.p2 === names[j]) || (m.p1 === names[j] && m.p2 === names[i]));
+                    // 縦横が同じ交点（自分自身）の場合は斜線、それ以外は対戦番号を表示する
                     html += (i === j) ? `<td class="diagonal-line"></td>` : `<td><span class="match-num">${match ? match.num : ""}</span></td>`;
                 }
                 html += `<td class="print-only"></td><td class="print-only"></td><td class="print-only"></td><td class="print-only"></td></tr>`;
             }
             html += `</table><h2 class="section-title">対戦順</h2><div class="match-list-container">`;
 
+            // 対戦順リストの列ごとの分割と描画処理
             const printColClass = `print-col-${printCols}`;
             const matchesPerCol = Math.ceil(matches.length / printCols);
 
@@ -193,88 +203,24 @@
             }
             html += `</div></div>`;
 
-            // 通常の画面表示用として出力（印刷レイアウトクラスは外した状態）
-            const outputEl = document.getElementById('output');
-            outputEl.innerHTML = html;
-            outputEl.classList.remove('print-layout-active');
-            
-            const printBtn = document.getElementById('printBtn');
-            printBtn.disabled = false;
-            printBtn.style.backgroundColor = '#28a745';
-
-            const screenshotBtn = document.getElementById('screenshotBtn');
-            screenshotBtn.disabled = false;
-            screenshotBtn.style.backgroundColor = '#007bff';
+            // 生成したHTMLを画面上の出力エリアに反映し、印刷ボタンを有効化する
+            document.getElementById('output').innerHTML = html;
+            document.getElementById('printBtn').disabled = false;
+            document.getElementById('printBtn').style.backgroundColor = '#28a745';
         }
 
-        /* 印刷ボタンを押したとき：一時的に印刷レイアウトを適用して印刷ダイアログを開く */
-        function handlePrint() {
-            const outputEl = document.getElementById('output');
-            outputEl.classList.add('print-layout-active');
-            window.print();
-            // 印刷が終わったら画面表示用にレイアウトを戻す
+        /* 
+         【関数：全画面表示にしてから印刷ダイアログを開く処理】
+        */
+        function printFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(() => {});
+            }
             setTimeout(() => {
-                outputEl.classList.remove('print-layout-active');
-            }, 500);
+                window.print();
+            }, 400);
         }
-
-        /* スクショボタンを押したとき：印刷レイアウトを一時的に適用して高画質撮影し、プレビューを表示 */
-        document.getElementById('screenshotBtn').addEventListener('click', function() {
-            const targetElement = document.getElementById('output');
-            
-            const btn = this;
-            const originalText = btn.textContent;
-            btn.textContent = '画像を作成中...';
-            btn.disabled = true;
-
-            // 撮影の瞬間だけ印刷用レイアウトに切り替える
-            targetElement.classList.add('print-layout-active');
-
-            html2canvas(targetElement, {
-                useCORS: true,
-                scale: 2 // 高画質化
-            }).then(canvas => {
-                // 撮影が終わったらすぐに画面表示用に戻す
-                targetElement.classList.remove('print-layout-active');
-
-                const imageURL = canvas.toDataURL('image/png');
-
-                // 既存のプレビューがあれば削除
-                const oldPreview = document.getElementById('screenshot-preview');
-                if (oldPreview) oldPreview.remove();
-
-                // プレビュー表示用のコンテナを作成
-                const previewContainer = document.createElement('div');
-                previewContainer.id = 'screenshot-preview';
-                previewContainer.style.cssText = 'margin-top: 15px; padding: 15px; background: #fff; border: 2px solid #007bff; border-radius: 8px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1);';
-                
-                previewContainer.innerHTML = `
-                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #007bff; font-weight: bold;">
-                        ↓ 画像ができました！画像を長押しして「"写真"に追加」してください
-                    </p>
-                    <img src="${imageURL}" style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 4px;" alt="スクショ画像">
-                    <br>
-                    <button onclick="document.getElementById('screenshot-preview').remove()" style="margin-top: 12px; background: #6c757d; font-size: 12px; padding: 8px 16px;">閉じる</button>
-                `;
-
-                // フォームエリアの下に追加
-                document.querySelector('.no-print').appendChild(previewContainer);
-
-                btn.textContent = originalText;
-                btn.disabled = false;
-
-                // プレビューが見える位置までスクロール
-                previewContainer.scrollIntoView({ behavior: 'smooth' });
-
-            }).catch(err => {
-                console.error('エラー:', err);
-                targetElement.classList.remove('print-layout-active');
-                alert('スクショの撮影に失敗しました。');
-                
-                btn.textContent = originalText;
-                btn.disabled = false;
-            });
-        });
     </script>
 </body>
 </html>
