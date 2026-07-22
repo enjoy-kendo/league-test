@@ -53,10 +53,10 @@
         .match-num { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #888; text-align: center; width: 100%; pointer-events: none; }
         
         /* 対戦順リストのコンテナ（画面・プレビュー共通で横並び） */
-        .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; }
+        .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 12px; }
         .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
         .print-col-2 { min-width: 44% !important; flex: 1; }
-        .print-col-3 { min-width: 29% !important; flex: 1; }
+        .print-col-3 { min-width: 31% !important; flex: 1; }
 
         .match-list-column table th,
         .match-list-column table td {
@@ -88,16 +88,19 @@
         body.share-mode .section-header { margin-bottom: 1px !important; }
         
         /* 共有モード：基本のテーブル・セル高さ */
-        body.share-mode .page table th, body.share-mode .page table td { height: 22px !important; font-size: 9px !important; padding: 0 !important; }
-        body.share-mode .match-list-column table th, body.share-mode .match-list-column table td { height: 20px !important; font-size: 9px !important; padding: 0 !important; }
-        body.share-mode .match-list-container { gap: 4px !important; }
+        body.share-mode .page table th, body.share-mode .page table td { height: 21px !important; font-size: 9px !important; padding: 0 !important; }
+        body.share-mode .match-list-column table th, body.share-mode .match-list-column table td { height: 19px !important; font-size: 9px !important; padding: 0 !important; }
+        
+        /* 💡 列と列の間のスペースを適度に広げました（10px〜12px） */
+        body.share-mode .match-list-container { gap: 10px !important; }
+        body.share-mode .print-col-3 { min-width: 31% !important; max-width: 32% !important; }
 
         /* 💡 9人と10人のときはさらに高さを詰めて1画面に収める */
         body.share-mode .page[data-n="9"] table th, body.share-mode .page[data-n="9"] table td,
-        body.share-mode .page[data-n="10"] table th, body.share-mode .page[data-n="10"] table td { height: 19px !important; font-size: 8.5px !important; }
+        body.share-mode .page[data-n="10"] table th, body.share-mode .page[data-n="10"] table td { height: 18px !important; font-size: 8px !important; }
         
         body.share-mode .page[data-n="9"] .match-list-column table th, body.share-mode .page[data-n="9"] .match-list-column table td,
-        body.share-mode .page[data-n="10"] .match-list-column table th, body.share-mode .page[data-n="10"] .match-list-column table td { height: 18px !important; font-size: 9px !important; }
+        body.share-mode .page[data-n="10"] .match-list-column table th, body.share-mode .page[data-n="10"] .match-list-column table td { height: 17px !important; font-size: 8.5px !important; }
 
         body.share-mode .print-only { display: none !important; }
         body.share-mode .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; }
