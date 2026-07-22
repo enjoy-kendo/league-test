@@ -38,12 +38,14 @@
         .name-header { overflow-wrap: break-word; word-break: break-all; line-height: 1.1; font-size: 11px; overflow: hidden; font-weight: normal; }
         /* 自分自身の対戦マスの斜線スタイル */
         .diagonal-line { background: #eee; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%); }
-        /* 対戦番号列の幅 */
-        .match-num-col { width: 35px; }
+        
+        /* 画面・プレビュー用：対戦順リストの対戦番号列を狭くする設定 */
+        .match-list-column .match-num-col { width: 24px !important; }
+
         /* マス目の中央に表示する対戦番号のスタイル */
         .match-num { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #888; text-align: center; width: 100%; pointer-events: none; }
         
-        /* 対戦順リストのコンテナ（画面表示でも横並びにする） */
+        /* 対戦順リストのコンテナ（画面・プレビュー共通で横並び） */
         .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; }
         .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
         .print-col-2 { min-width: 44% !important; flex: 1; }
@@ -55,7 +57,7 @@
             font-size: 12px !important;
         }
 
-        /* 印刷時のみ表示する列の初期設定（画面では非表示） */
+        /* 画面・プレビュー用：勝敗列は非表示 */
         .print-only { display: none; }
 
         /* 戻るボタンエリア（通常時は非表示） */
@@ -63,40 +65,35 @@
 
         /* ==========================================
            共有画面モード（プレビュー画面）のスタイル
+           ※画面表示と完全に同じにする
            ========================================== */
         body.share-mode .no-print { display: none !important; }
         body.share-mode .back-btn-area { display: block !important; margin-bottom: 15px; }
-        
-        body.share-mode h2.section-title { font-size: 13pt !important; }
-        body.share-mode .match-num { color: #666 !important; font-size: 9px !important; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        body.share-mode .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        body.share-mode .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; }
-        body.share-mode .page table th, body.share-mode .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 35px !important; }
-        
-        /* 人数に応じた対戦表の幅の調整 */
-        body.share-mode .page[data-n="3"] table { width: 50% !important; }
-        body.share-mode .page[data-n="4"] table { width: 60% !important; }
-        body.share-mode .page[data-n="5"] table { width: 70% !important; }
-        body.share-mode .page[data-n="6"] table { width: 80% !important; }
-        body.share-mode .page[data-n="7"] table { width: 90% !important; }
-        body.share-mode .page[data-n="8"] table { width: 95% !important; }
-        body.share-mode .page[data-n="9"] table { width: 100% !important; }
-        body.share-mode .page[data-n="10"] table { width: 100% !important; }
+        body.share-mode h2.section-title { font-size: 1.2em !important; }
+        body.share-mode .match-num { color: #888 !important; font-size: 12px !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; }
+        body.share-mode .page table { border-collapse: collapse !important; border-spacing: 0 !important; border: none !important; }
+        body.share-mode .page table th, body.share-mode .page table td { border: 1px solid #aaa !important; height: 30px !important; }
+        body.share-mode .page table th { background: #eee !important; }
+        body.share-mode .match-list-column table th, body.share-mode .match-list-column table td { height: 30px !important; font-size: 12px !important; }
+        body.share-mode .match-list-column .match-num-col { width: 24px !important; }
+        body.share-mode .print-only { display: none !important; }
+        body.share-mode .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; }
 
-        body.share-mode .print-only { display: table-cell !important; width: 25px !important; }
-        body.share-mode .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-
-        /* 実際の印刷時の設定 */
+        /* ==========================================
+           実際の印刷時の設定（絶対にそのまま変えない）
+           ========================================== */
         @media print {
             h2.section-title { font-size: 10pt !important; }
             @page { size: A4 portrait; margin: 3mm 5mm 1mm 5mm; }
             .no-print, .back-btn-area { display: none !important; }
             .page[data-n="3"] table, .page[data-n="4"] table, .page[data-n="5"] table, .page[data-n="6"] table, .page[data-n="7"] table { margin-bottom: 20mm !important; }
-            .match-num { color: #666 !important; font-size: 7px !important; top: 4px; left: 5px; }
+            .match-num { color: #666 !important; font-size: 7px !important; top: 4px; left: 5px; transform: none !important; }
             .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; }
+            .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; width: 100% !important; }
             .page table th, .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 37px !important; }
             .match-list-column table th, .match-list-column table td { height: 30px !important; font-size: 13px !important; }
+            .match-list-column .match-num-col { width: 35px !important; }
+            
             .page[data-n="3"] table { width: 50% !important; }
             .page[data-n="4"] table { width: 60% !important; }
             .page[data-n="5"] table { width: 70% !important; }
@@ -105,6 +102,7 @@
             .page[data-n="8"] table { width: 95% !important; }
             .page[data-n="9"] table { width: 100% !important; }
             .page[data-n="10"] table { width: 100% !important; }
+
             .print-only { display: table-cell !important; width: 25px !important; }
             .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; }
