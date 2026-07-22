@@ -42,16 +42,19 @@
         .match-num-col { width: 35px; }
         /* マス目の中央に表示する対戦番号のスタイル */
         .match-num { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #888; text-align: center; width: 100%; pointer-events: none; }
-        /* 対戦順リストのコンテナ */
-        .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 20px; }
-        .match-list-column { flex: 1; min-width: 100%; }
+        
+        /* 対戦順リストのコンテナ（画面表示でも横並びにする） */
+        .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; }
+        .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
+        .print-col-2 { min-width: 44% !important; flex: 1; }
+        .print-col-3 { min-width: 29% !important; flex: 1; }
 
-        /* 画面表示時の対戦リストの調整 */
         .match-list-column table th,
         .match-list-column table td {
-            font-size: 13px !important;
-            height: 38px !important;
+            height: 30px !important;
+            font-size: 12px !important;
         }
+
         /* 印刷時のみ表示する列の初期設定（画面では非表示） */
         .print-only { display: none; }
 
@@ -60,20 +63,17 @@
 
         /* ==========================================
            共有画面モード（プレビュー画面）のスタイル
-           ※印刷時のレイアウトをそのまま画面上に再現
            ========================================== */
         body.share-mode .no-print { display: none !important; }
         body.share-mode .back-btn-area { display: block !important; margin-bottom: 15px; }
         
         body.share-mode h2.section-title { font-size: 13pt !important; }
-        
         body.share-mode .match-num { color: #666 !important; font-size: 9px !important; top: 50%; left: 50%; transform: translate(-50%, -50%); }
         body.share-mode .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         body.share-mode .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; }
         body.share-mode .page table th, body.share-mode .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 35px !important; }
-        body.share-mode .match-list-column table th, body.share-mode .match-list-column table td { height: 30px !important; font-size: 12px !important; }
-
-        /* 人数に応じた対戦表の幅の調整（プレビュー・印刷共通） */
+        
+        /* 人数に応じた対戦表の幅の調整 */
         body.share-mode .page[data-n="3"] table { width: 50% !important; }
         body.share-mode .page[data-n="4"] table { width: 60% !important; }
         body.share-mode .page[data-n="5"] table { width: 70% !important; }
@@ -83,18 +83,8 @@
         body.share-mode .page[data-n="9"] table { width: 100% !important; }
         body.share-mode .page[data-n="10"] table { width: 100% !important; }
 
-        body.share-mode .page[data-n="9"] .match-list-column table { font-size: 12px !important; }
-        body.share-mode .page[data-n="9"] .match-list-column table td { height: 26px !important; }
-        body.share-mode .page[data-n="10"] .match-list-column table { font-size: 11px !important; }
-        body.share-mode .page[data-n="10"] .match-list-column table td { height: 22px !important; }
-
         body.share-mode .print-only { display: table-cell !important; width: 25px !important; }
         body.share-mode .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-
-        body.share-mode .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; }
-        body.share-mode .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
-        body.share-mode .print-col-2 { min-width: 44% !important; }
-        body.share-mode .print-col-3 { min-width: 29% !important; }
 
         /* 実際の印刷時の設定 */
         @media print {
