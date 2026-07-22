@@ -115,8 +115,8 @@
             /* 印刷時の対戦表マス内番号を「左上」に固定 */
             .page table td .match-num { 
                 position: absolute !important;
-                top: 2px !important; 
-                left: 3px !important; 
+                top: 3px !important; 
+                left: 4px !important; 
                 transform: none !important; 
                 text-align: left !important; 
                 width: auto !important; 
@@ -126,11 +126,12 @@
             
             .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; width: 100% !important; }
-            .page table th, .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 32px !important; }
             
-            /* 💡 10人のときは印刷時の高さをさらに少し詰めて1ページに収める */
-            .page[data-n="10"] table th, .page[data-n="10"] table td { height: 28px !important; font-size: 10px !important; }
-            .page[data-n="10"] .match-list-column table th, .page[data-n="10"] .match-list-column table td { height: 23px !important; font-size: 11px !important; }
+            /* 💡 対戦表の高さはもとのサイズ（37px）に戻しました */
+            .page table th, .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 37px !important; }
+            
+            /* 💡 10人のときの対戦順リストのみ高さを調整して1ページに収める */
+            .page[data-n="10"] .match-list-column table th, .page[data-n="10"] .match-list-column table td { height: 27px !important; font-size: 11px !important; }
 
             .match-list-column table th, .match-list-column table td { height: 27px !important; font-size: 12px !important; }
             .match-list-column td:first-child { font-size: 12px !important; }
