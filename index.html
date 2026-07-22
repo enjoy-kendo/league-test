@@ -63,18 +63,42 @@
             font-size: 13px !important;
             height: 38px !important;
         }
-        /* 印刷時のみ表示する列の初期設定（画面では非表示） */
+        /* 画面表示時、印刷用列（勝負分順位）は非表示 */
         .print-only { display: none; }
 
-        /* 印刷時のスタイル設定 */
+        /* ▼ 印刷時、およびスクショ撮影時にのみ適用されるレイアウト指定 */
+        .print-layout-active h2.section-title { font-size: 10pt !important; }
+        .print-layout-active .match-num { color: #666 !important; font-size: 7px !important; top: 4px; left: 5px; transform: none !important; }
+        .print-layout-active .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .print-layout-active .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; }
+        .print-layout-active .page table th, .print-layout-active .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 37px !important; }
+        .print-layout-active .match-list-column table th, .print-layout-active .match-list-column table td { height: 30px !important; font-size: 13px !important; }
+
+        /* 人数に応じた対戦表の幅の調整（スクショ・印刷用） */
+        .print-layout-active .page[data-n="3"] table { width: 50% !important; }
+        .print-layout-active .page[data-n="4"] table { width: 60% !important; }
+        .print-layout-active .page[data-n="5"] table { width: 70% !important; }
+        .print-layout-active .page[data-n="6"] table { width: 80% !important; }
+        .print-layout-active .page[data-n="7"] table { width: 90% !important; }
+        .print-layout-active .page[data-n="8"] table { width: 95% !important; }
+        .print-layout-active .page[data-n="9"] table { width: 100% !important; }
+        .print-layout-active .page[data-n="10"] table { width: 100% !important; }
+
+        .print-layout-active .print-only { display: table-cell !important; width: 25px !important; }
+        .print-layout-active .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+        .print-layout-active .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; }
+        .print-layout-active .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
+        .print-layout-active .print-col-2 { min-width: 44% !important; }
+        .print-layout-active .print-col-3 { min-width: 29% !important; }
+
+        /* ▼ 実際の印刷時（window.print用）の設定 */
         @media print {
-            h2.section-title { font-size: 10pt !important; }
             @page { size: A4 portrait; margin: 3mm 5mm 1mm 5mm; }
-
-            /* 印刷時にフォームエリアを非表示にする */
             .no-print { display: none; }
-
-            /* 参加者人数（3〜7人）に応じた余白調整 */
+            body { background-color: #fff; }
+            /* 印刷時は強制的にレイアウトクラスを適用 */
+            #output { }
             .page[data-n="3"] table,
             .page[data-n="4"] table,
             .page[data-n="5"] table,
@@ -82,36 +106,6 @@
             .page[data-n="7"] table { 
                 margin-bottom: 20mm !important; 
             }
-
-            .match-num { color: #666 !important; font-size: 7px !important; top: 4px; left: 5px; }
-            .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; }
-            .page table th, .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 37px !important; }
-            .match-list-column table th, .match-list-column table td { height: 30px !important; font-size: 13px !important; }
-
-            /* 人数に応じた対戦表の幅の調整 */
-            .page[data-n="3"] table { width: 50% !important; }
-            .page[data-n="4"] table { width: 60% !important; }
-            .page[data-n="5"] table { width: 70% !important; }
-            .page[data-n="6"] table { width: 80% !important; }
-            .page[data-n="7"] table { width: 90% !important; }
-            .page[data-n="8"] table { width: 95% !important; }
-            .page[data-n="9"] table { width: 100% !important; }
-            .page[data-n="10"] table { width: 100% !important; }
-
-            /* 9人・10人の場合の対戦リストの文字サイズと高さ調整 */
-            .page[data-n="9"] .match-list-column table { font-size: 13px !important; }
-            .page[data-n="9"] .match-list-column table td { height: 26px !important; }
-            .page[data-n="10"] .match-list-column table { font-size: 11px !important; }
-            .page[data-n="10"] .match-list-column table td { height: 22px !important; }
-
-            .print-only { display: table-cell !important; width: 25px !important; }
-            .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-
-            .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; }
-            .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
-            .print-col-2 { min-width: 44% !important; }
-            .print-col-3 { min-width: 29% !important; }
         }
     </style>
 </head>
@@ -128,12 +122,12 @@
         
         <!-- 操作ボタンを横並びにするグループ -->
         <div class="button-group" style="margin-top: 8px;">
-            <button id="printBtn" onclick="window.print()" disabled style="background-color: #6c757d;">印刷する</button>
+            <button id="printBtn" onclick="handlePrint()" disabled style="background-color: #6c757d;">印刷する</button>
             <button id="screenshotBtn" disabled style="background-color: #6c757d;">スクショを撮る</button>
         </div>
     </div>
 
-    <!-- 生成された対戦表が表示されるエリア（印刷・スクショ共通範囲） -->
+    <!-- 生成された対戦表が表示されるエリア -->
     <div id="output"></div>
 
     <script>
@@ -143,7 +137,7 @@
             5: [[0, 1, 6, 9, 3], [1, 0, 4, 7, 10], [6, 4, 0, 2, 8], [9, 7, 2, 0, 5], [3, 10, 8, 5, 0]],
             6: [[0, 1, 12, 8, 10, 6], [1, 0, 4, 13, 7, 11], [12, 4, 0, 2, 14, 9], [8, 13, 2, 0, 5, 15], [10, 7, 14, 5, 0, 3], [6, 11, 9, 15, 3, 0]],
             7: [[0, 1, 14, 8, 20, 12, 4], [1, 0, 5, 15, 9, 19, 13], [14, 5, 0, 2, 16, 10, 21], [8, 15, 2, 0, 6, 17, 11], [20, 9, 16, 6, 0, 3, 18], [12, 19, 10, 17, 3, 0, 7], [4, 13, 21, 11, 18, 7, 0]],
-            8: [[0, 1, 17, 12, 23, 10, 27, 8], [1, 0, 5, 18, 13, 24, 9, 28], [17, 5, 0, 2, 19, 14, 25, 11], [12, 18, 2, 0, 6, 20, 15, 26], [23, 13, 19, 6, 0, 3, 21, 16], [10, 24, 14, 20, 3, 0, 7, 22], [27, 9, 25, 15, 21, 7, 0, 4], [8, 28, 11, 26, 16, 22, 4, 0]],
+            8: [[0, 1, 17, 12, 23, 10, 27, 8], [1, 0, 5, 18, 13, 24, 9, 28], [17, 5, 0, 2, 19, 14, 25, 11], [12, 18, 2, 0, 6, 20, 15, 26], [23, 13, 19, 6, 0, 3, 21, 16], [10, 24, 14, 20, 3, 0, 7, 27], [27, 9, 25, 15, 21, 7, 0, 4], [8, 28, 11, 26, 16, 22, 4, 0]],
             9: [[0, 1, 24, 10, 19, 31, 16, 35, 5], [1, 0, 6, 25, 11, 20, 32, 17, 36], [24, 6, 0, 2, 26, 12, 21, 33, 18], [10, 25, 2, 0, 7, 27, 13, 22, 34], [19, 11, 26, 7, 0, 3, 28, 14, 23], [31, 20, 12, 27, 3, 0, 8, 29, 15], [16, 32, 21, 13, 28, 8, 0, 4, 30], [35, 17, 33, 22, 14, 29, 4, 0, 9], [5, 36, 18, 34, 23, 15, 30, 9, 0]],
             10: [[0, 1, 21, 14, 29, 35, 40, 12, 44, 10], [1, 0, 6, 22, 15, 30, 36, 41, 11, 45], [21, 6, 0, 2, 23, 16, 31, 37, 42, 13], [14, 22, 2, 0, 7, 24, 17, 32, 38, 43], [29, 15, 23, 7, 0, 3, 25, 18, 33, 39], [35, 30, 16, 24, 3, 0, 8, 26, 19, 34], [40, 36, 31, 17, 25, 8, 0, 4, 27, 20], [12, 41, 37, 32, 18, 26, 4, 0, 9, 28], [44, 11, 42, 38, 33, 19, 27, 9, 0, 5], [10, 45, 13, 43, 39, 34, 20, 28, 5, 0]]
         };
@@ -199,7 +193,10 @@
             }
             html += `</div></div>`;
 
-            document.getElementById('output').innerHTML = html;
+            // 通常の画面表示用として出力（印刷レイアウトクラスは外した状態）
+            const outputEl = document.getElementById('output');
+            outputEl.innerHTML = html;
+            outputEl.classList.remove('print-layout-active');
             
             const printBtn = document.getElementById('printBtn');
             printBtn.disabled = false;
@@ -210,7 +207,18 @@
             screenshotBtn.style.backgroundColor = '#007bff';
         }
 
-        /* ▼ iPhone対応：プレビューエリアに画像を表示して長押し保存できるようにする処理 */
+        /* 印刷ボタンを押したとき：一時的に印刷レイアウトを適用して印刷ダイアログを開く */
+        function handlePrint() {
+            const outputEl = document.getElementById('output');
+            outputEl.classList.add('print-layout-active');
+            window.print();
+            // 印刷が終わったら画面表示用にレイアウトを戻す
+            setTimeout(() => {
+                outputEl.classList.remove('print-layout-active');
+            }, 500);
+        }
+
+        /* スクショボタンを押したとき：印刷レイアウトを一時的に適用して高画質撮影し、プレビューを表示 */
         document.getElementById('screenshotBtn').addEventListener('click', function() {
             const targetElement = document.getElementById('output');
             
@@ -219,10 +227,16 @@
             btn.textContent = '画像を作成中...';
             btn.disabled = true;
 
+            // 撮影の瞬間だけ印刷用レイアウトに切り替える
+            targetElement.classList.add('print-layout-active');
+
             html2canvas(targetElement, {
                 useCORS: true,
                 scale: 2 // 高画質化
             }).then(canvas => {
+                // 撮影が終わったらすぐに画面表示用に戻す
+                targetElement.classList.remove('print-layout-active');
+
                 const imageURL = canvas.toDataURL('image/png');
 
                 // 既存のプレビューがあれば削除
@@ -249,11 +263,12 @@
                 btn.textContent = originalText;
                 btn.disabled = false;
 
-                // プレビューが見える位置まで自動スクロール
+                // プレビューが見える位置までスクロール
                 previewContainer.scrollIntoView({ behavior: 'smooth' });
 
             }).catch(err => {
                 console.error('エラー:', err);
+                targetElement.classList.remove('print-layout-active');
                 alert('スクショの撮影に失敗しました。');
                 
                 btn.textContent = originalText;
