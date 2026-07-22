@@ -43,7 +43,7 @@
         .match-list-column .match-num-col { width: 24px !important; }
         .match-list-column td:first-child { width: 24px !important; }
 
-        /* 💡 9人・10人のときだけ対戦番号列の幅を15pxにする（画面・プレビュー用） */
+        /* 9人・10人のときだけ対戦番号列の幅を15pxにする（画面・プレビュー用） */
         .page[data-n="9"] .match-list-column .match-num-col,
         .page[data-n="10"] .match-list-column .match-num-col,
         .page[data-n="9"] .match-list-column td:first-child,
@@ -64,21 +64,16 @@
             font-size: 12px !important;
         }
 
-        /* 💡 3〜8人のときの対戦順リストの番号文字サイズ（標準 12px） */
         .match-list-column td:first-child {
             font-size: 12px !important;
         }
 
-        /* 💡 9人・10人のときだけ、画面上の対戦順リストの番号文字サイズを小さくする（10px） */
         .page[data-n="9"] .match-list-column td:first-child,
         .page[data-n="10"] .match-list-column td:first-child {
             font-size: 10px !important;
         }
 
-        /* 画面・プレビュー用：勝敗列は非表示 */
         .print-only { display: none; }
-
-        /* 戻るボタンエリア（通常時は非表示） */
         .back-btn-area { display: none; }
 
         /* ==========================================
@@ -108,7 +103,24 @@
            実際の印刷時の設定（完全固定・絶対に崩さない）
            ========================================== */
         @media print {
-            h2.section-title { font-size: 9pt !important; margin: 3px 0 !important; }
+            /* ページ全体の上マージンは0にして「対戦表」の上は動かさない */
+            .page {
+                margin-top: 0 !important;
+            }
+
+            h2.section-title { 
+                font-size: 9pt !important; 
+                margin-top: 3px !important; 
+                margin-bottom: 3px !important; 
+            }
+
+            /* 💡 「対戦順」タイトルの上だけに大きなマージンを持たせてスペースを広げる */
+            .page h2.match-list-title {
+                font-size: 9pt !important; 
+                margin-top: 30px !important; /* ← ここを大きくすると「対戦順」の上のスペースが広がります */
+                margin-bottom: 3px !important;
+            }
+
             @page { size: A4 portrait; margin: 2mm 5mm 1mm 5mm; }
             .no-print, .back-btn-area { display: none !important; }
             
@@ -130,12 +142,12 @@
             /* 対戦表の高さはもとのサイズ（37px） */
             .page table th, .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 37px !important; }
             
-            /* 💡 9人のときの対戦順リスト（印刷時：少し大きめ 12px・高さ29px） */
+            /* 9人のときの対戦順リスト（印刷時：高さ29px・12px） */
             .page[data-n="9"] .match-list-column table th, 
             .page[data-n="9"] .match-list-column table td { height: 29px !important; font-size: 12px !important; }
-            .page[data-n="9"] .match-list-column td:first-child { font-size: 11px !important; }
+            .page[data-n="9"] .match-list-column td:first-child { font-size: 12px !important; }
 
-            /* 💡 10人のときの対戦順リスト（印刷時：1ページに収めるサイズ 高さ27px） */
+            /* 10人のときの対戦順リスト（印刷時：1ページに収めるサイズ 高さ27px） */
             .page[data-n="10"] .match-list-column table th, 
             .page[data-n="10"] .match-list-column table td { height: 27px !important; font-size: 11px !important; }
             .page[data-n="10"] .match-list-column td:first-child { font-size: 10px !important; }
@@ -235,7 +247,7 @@
                 }
                 html += `<td class="print-only"></td><td class="print-only"></td><td class="print-only"></td><td class="print-only"></td></tr>`;
             }
-            html += `</table><h2 class="section-title">対戦順</h2><div class="match-list-container">`;
+            html += `</table><h2 class="section-title match-list-title">対戦順</h2><div class="match-list-container">`;
 
             const printColClass = `print-col-${printCols}`;
             const matchesPerCol = Math.ceil(matches.length / printCols);
