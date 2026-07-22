@@ -79,16 +79,26 @@
         /* ==========================================
            共有画面モード（プレビュー画面）のスタイル
            ========================================== */
-        body.share-mode { padding: 4px !important; }
+        body.share-mode { padding: 2px !important; }
         body.share-mode .no-print { display: none !important; }
-        body.share-mode .back-btn-area { display: block !important; margin-bottom: 5px !important; }
-        body.share-mode h2.section-title { font-size: 10pt !important; margin: 2px 0 !important; }
-        body.share-mode .match-num { color: #888 !important; font-size: 11px !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; }
+        body.share-mode .back-btn-area { display: block !important; margin-bottom: 2px !important; }
+        body.share-mode h2.section-title { font-size: 9pt !important; margin: 1px 0 !important; }
+        body.share-mode .match-num { color: #888 !important; font-size: 10px !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; }
         body.share-mode .page { margin-bottom: 0 !important; }
-        body.share-mode .section-header { margin-bottom: 2px !important; }
-        body.share-mode .page table th, body.share-mode .page table td { height: 26px !important; font-size: 10px !important; }
-        body.share-mode .match-list-column table th, body.share-mode .match-list-column table td { height: 24px !important; font-size: 10px !important; }
-        body.share-mode .match-list-container { gap: 8px !important; }
+        body.share-mode .section-header { margin-bottom: 1px !important; }
+        
+        /* 共有モード：基本のテーブル・セル高さ */
+        body.share-mode .page table th, body.share-mode .page table td { height: 22px !important; font-size: 9px !important; padding: 0 !important; }
+        body.share-mode .match-list-column table th, body.share-mode .match-list-column table td { height: 20px !important; font-size: 9px !important; padding: 0 !important; }
+        body.share-mode .match-list-container { gap: 4px !important; }
+
+        /* 💡 9人と10人のときはさらに高さを詰めて1画面に収める */
+        body.share-mode .page[data-n="9"] table th, body.share-mode .page[data-n="9"] table td,
+        body.share-mode .page[data-n="10"] table th, body.share-mode .page[data-n="10"] table td { height: 19px !important; font-size: 8.5px !important; }
+        
+        body.share-mode .page[data-n="9"] .match-list-column table th, body.share-mode .page[data-n="9"] .match-list-column table td,
+        body.share-mode .page[data-n="10"] .match-list-column table th, body.share-mode .page[data-n="10"] .match-list-column table td { height: 18px !important; font-size: 9px !important; }
+
         body.share-mode .print-only { display: none !important; }
         body.share-mode .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; }
 
@@ -248,7 +258,7 @@
             html += `</div></div>`;
 
             // 共有画面モード切替ボタン
-            html += `<div style="margin-top: 15px; text-align: center;" class="no-print">` +
+            html += `<div style="margin-top: 10px; text-align: center;" class="no-print">` +
                     `<button onclick="enterShareMode()" style="background-color: #28a745; font-size: 16px; padding: 12px 24px;">📸 印刷プレビュー画面を表示する</button>` +
                     `</div>`;
 
