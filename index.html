@@ -184,8 +184,20 @@
             .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; width: 100% !important; }
             
-            .page table th, .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 37px !important; }
+            .page table th, .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; }
             
+            /* ==========================================
+               ★ 印刷時のみ：人数（data-n）ごとの対戦表の縦の長さ（高さ）設定
+               ========================================== */
+            .page[data-n="3"] table th, .page[data-n="3"] table td { height: 45px !important; }
+            .page[data-n="4"] table th, .page[data-n="4"] table td { height: 42px !important; }
+            .page[data-n="5"] table th, .page[data-n="5"] table td { height: 38px !important; }
+            .page[data-n="6"] table th, .page[data-n="6"] table td { height: 34px !important; }
+            .page[data-n="7"] table th, .page[data-n="7"] table td { height: 30px !important; }
+            .page[data-n="8"] table th, .page[data-n="8"] table td { height: 26px !important; }
+            .page[data-n="9"] table th, .page[data-n="9"] table td { height: 23px !important; }
+            .page[data-n="10"] table th, .page[data-n="10"] table td { height: 20px !important; }
+
             .page[data-n="9"] .match-list-column table th, 
             .page[data-n="9"] .match-list-column table td { height: 29px !important; font-size: 12px !important; }
             .page[data-n="9"] .match-list-column td:first-child { font-size: 10px !important; }
