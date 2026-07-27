@@ -110,28 +110,6 @@
 
         .print-only { display: none !important; }
 
-        /* フォームを隠したときに表の左下に出現する極小・半透明の再表示ボタン */
-        #show-form-float-btn {
-            display: none;
-            margin-top: 15px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 3px 8px;
-            font-size: 11px;
-            border-radius: 3px;
-            opacity: 0.4;
-            transition: opacity 0.2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            cursor: pointer;
-        }
-        #show-form-float-btn:hover {
-            opacity: 1;
-        }
-        body.form-hidden #show-form-float-btn {
-            display: inline-block;
-        }
-
         /* ==========================================
             実際の印刷時の設定
            ========================================== */
@@ -151,7 +129,7 @@
             }
 
             @page { size: A4 portrait; margin: 2mm 5mm 1mm 5mm; }
-            .no-print, #show-form-float-btn { display: none !important; }
+            .no-print, #toggleFormBtn { display: none !important; }
             
             .page table td .match-num { 
                 position: absolute !important;
@@ -211,14 +189,10 @@
         </div>
         <button onclick="generate()">表を作成</button>
         <button id="printBtn" onclick="window.print()" disabled style="background-color: #6c757d;">印刷する</button>
-        <button id="toggleFormBtn" onclick="toggleForm()" disabled style="background-color: #6c757d;">入力フォームを隠す</button>
     </div>
 
     <!-- 生成された対戦表が表示されるエリア -->
     <div id="output"></div>
-
-    <!-- フォームを隠したときに表の左下に出現する再表示ボタン -->
-    <button id="show-form-float-btn" onclick="toggleForm()">入力フォームを表示</button>
 
     <script>
         const LEAGUE_TABLES = {
@@ -282,17 +256,15 @@
                 colMatches.forEach(m => html += `<tr><td>${m.num}</td><td>${m.p1}</td><td>${m.p2}</td></tr>`);
                 html += `</table></div>`;
             }
-            html += `</div></div>`;
+
+            // 表の下（左下）に切り替えボタンを1つだけ配置
+            html += `</div><button id="toggleFormBtn" onclick="toggleForm()" style="background-color: #6c757d; margin-top: 15px; padding: 8px 16px; font-size: 14px; font-weight: bold; border-radius: 4px; color: white; border: none; cursor: pointer;">入力フォームを隠す</button></div>`;
 
             document.getElementById('output').innerHTML = html;
             
-            // ボタンの有効化
+            // 印刷ボタンの有効化
             document.getElementById('printBtn').disabled = false;
             document.getElementById('printBtn').style.backgroundColor = '#28a745';
-            
-            const toggleBtn = document.getElementById('toggleFormBtn');
-            toggleBtn.disabled = false;
-            toggleBtn.style.backgroundColor = '#6c757d';
         }
 
         // 入力フォームの折りたたみ・展開機能
@@ -301,12 +273,11 @@
             const toggleBtn = document.getElementById('toggleFormBtn');
             
             inputSection.classList.toggle('collapsed');
-            document.body.classList.toggle('form-hidden');
 
             if (inputSection.classList.contains('collapsed')) {
-                toggleBtn.textContent = '入力フォームを表示';
+                if (toggleBtn) toggleBtn.textContent = '入力フォームを表示';
             } else {
-                toggleBtn.textContent = '入力フォームを隠す';
+                if (toggleBtn) toggleBtn.textContent = '入力フォームを隠す';
             }
         }
     </script>
