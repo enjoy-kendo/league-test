@@ -63,14 +63,15 @@
         .print-col-2 { min-width: 44%; flex: 1; }
         .print-col-3 { min-width: 31%; max-width: 32%; flex: 1; }
 
-        .match-list-column table th,
-        .match-list-column table td {
+        .match-list-container table th,
+        .match-list-container table td {
             height: 19px;
             font-size: 9px;
             padding: 0;
         }
 
         .print-only { display: none; }
+        .print-date { display: none; } /* 画面では非表示 */
 
         /* ==========================================
             通常画面プレビュー用の高さ・フォントサイズ調整
@@ -130,7 +131,31 @@
             .page {
                 margin-top: 0 !important;
                 margin-bottom: 0 !important;
+                position: relative !important;
             }
+
+            .section-header { position: relative !important; }
+            .date-display { display: none !important; }
+
+            /* 印刷時：対戦表テーブルの右端の延長上に日付を配置 */
+            .print-date {
+                display: block !important;
+                position: absolute !important;
+                top: 3px !important;
+                font-size: 8pt !important;
+                color: #333 !important;
+                white-space: nowrap !important;
+            }
+
+            /* 人数ごとの表の幅に合わせて日付の右端位置を同期 */
+            .page[data-n="3"] .print-date { left: 50% !important; transform: translateX(-100%); }
+            .page[data-n="4"] .print-date { left: 60% !important; transform: translateX(-100%); }
+            .page[data-n="5"] .print-date { left: 70% !important; transform: translateX(-100%); }
+            .page[data-n="6"] .print-date { left: 80% !important; transform: translateX(-100%); }
+            .page[data-n="7"] .print-date { left: 90% !important; transform: translateX(-100%); }
+            .page[data-n="8"] .print-date { left: 95% !important; transform: translateX(-100%); }
+            .page[data-n="9"] .print-date { right: 0 !important; }
+            .page[data-n="10"] .print-date { right: 0 !important; }
 
             .page h2.section-title { 
                 font-size: 9pt !important; 
@@ -245,7 +270,11 @@
             else if (n >= 9) printCols = 3;
 
             let html = `<div class="page" data-n="${n}">` +
-                       `<div class="section-header"><h2 class="section-title">対戦表（${n}人・${matches.length}試合）</h2><div class="date-display">${dateStr}</div></div>` +
+                       `<div class="section-header">` +
+                       `<h2 class="section-title">対戦表（${n}人・${matches.length}試合）</h2>` +
+                       `<div class="date-display">${dateStr}</div>` +
+                       `<div class="print-date">${dateStr}</div>` +
+                       `</div>` +
                        `<table><tr><th></th>`;
             names.forEach(name => html += `<th class="name-header">${name}</th>`);
             html += `<th class="print-only">勝</th><th class="print-only">負</th><th class="print-only">分</th><th class="print-only">順位</th></tr>`;
