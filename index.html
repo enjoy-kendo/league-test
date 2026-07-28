@@ -21,13 +21,13 @@
         button { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; background-color: #007bff; color: white; font-weight: bold; font-size: 14px; margin-right: 5px; margin-bottom: 5px; }
         button:disabled { background-color: #ccc; }
 
-        /* フォーム切替ボタンのスタイル（対戦順テーブルのすぐ左下に配置） */
+        /* フォーム切替ボタンのスタイル（対戦順テーブルのすぐ左下・上に余白を追加） */
         .toggle-form-btn { 
             background-color: #343a40; 
             color: white; 
             font-size: 12px;
             padding: 4px 10px;
-            margin-top: 5px;
+            margin-top: 15px; /* ここを広げてスペースを作りました */
             margin-bottom: 15px;
             display: inline-block;
         }
@@ -273,7 +273,7 @@
                 html += `</table></div>`;
             }
 
-            // 対戦順の表全体のすぐ下（左下）に切替ボタンを配置
+            // 対戦順の表全体の下にスペースを空けて切替ボタンを配置
             html += `</div>` +
                     `<button id="toggleBtn" class="toggle-form-btn" onclick="toggleForm()">入力フォームを隠す</button>` +
                     `</div>`;
