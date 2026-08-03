@@ -170,39 +170,59 @@
 
             .page h2.match-list-title {
                 font-size: 9pt !important; 
-                margin-top: 30px !important; 
+                margin-top: 12px !important; 
                 margin-bottom: 3px !important;
+            }
+            .page[data-n="11"] h2.match-list-title,
+            .page[data-n="12"] h2.match-list-title {
+                margin-top: 8px !important;
             }
             
             .page table td .match-num { 
                 position: absolute !important;
-                top: 3px !important; 
-                left: 4px !important; 
+                top: 2px !important; 
+                left: 3px !important; 
                 transform: none !important; 
                 text-align: left !important; 
                 width: auto !important; 
-                font-size: 7px !important; 
+                font-size: 6px !important; 
                 color: #666 !important; 
             }
             
             .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; width: 100% !important; }
             
+            /* 通常の行高さ */
             .page table th, .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 37px !important; font-size: 11px !important; }
+            
+            /* 11人・12人印刷時の対戦表の行高さ（33px） */
+            .page[data-n="11"] table th, .page[data-n="11"] table td,
+            .page[data-n="12"] table th, .page[data-n="12"] table td {
+                height: 33px !important;
+                font-size: 9px !important;
+            }
             
             .page[data-n="9"] .match-list-column table th, 
             .page[data-n="9"] .match-list-column table td { height: 32px !important; font-size: 12px !important; }
             .page[data-n="9"] .match-list-column td:first-child { font-size: 10px !important; width: 15px !important; }
 
-            .page[data-n="10"] .match-list-column table th, 
-            .page[data-n="10"] .match-list-column table td,
-            .page[data-n="11"] .match-list-column table th,
-            .page[data-n="11"] .match-list-column table td,
-            .page[data-n="12"] .match-list-column table th,
-            .page[data-n="12"] .match-list-column table td { height: 22px !important; font-size: 9px !important; }
+            /* 11人の対戦順リスト側の高さ（25px） */
+            .page[data-n="11"] .match-list-column table th, 
+            .page[data-n="11"] .match-list-column table td { 
+                height: 25px !important; 
+                font-size: 8px !important; 
+            }
+
+            /* 12人の対戦順リスト側の高さ（23px） */
+            .page[data-n="12"] .match-list-column table th, 
+            .page[data-n="12"] .match-list-column table td { 
+                height: 23px !important; 
+                font-size: 8px !important; 
+            }
+            
             .page[data-n="10"] .match-list-column td:first-child,
             .page[data-n="11"] .match-list-column td:first-child,
-            .page[data-n="12"] .match-list-column td:first-child { font-size: 9px !important; width: 15px !important; }
+            .page[data-n="12"] .match-list-column td:first-child { font-size: 8px !important; width: 14px !important; }
 
             .match-list-column table th, .match-list-column table td { height: 32px !important; font-size: 14px !important; }
             .match-list-column td:first-child { font-size: 12px !important; width: 30px !important; }
@@ -255,7 +275,6 @@
             8: [[0, 1, 17, 12, 23, 10, 27, 8], [1, 0, 5, 18, 13, 24, 9, 28], [17, 5, 0, 2, 19, 14, 25, 11], [12, 18, 2, 0, 6, 20, 15, 26], [23, 13, 19, 6, 0, 3, 21, 16], [10, 24, 14, 20, 3, 0, 7, 22], [27, 9, 25, 15, 21, 7, 0, 4], [8, 28, 11, 26, 16, 22, 4, 0]],
             9: [[0, 1, 24, 10, 19, 31, 16, 35, 5], [1, 0, 6, 25, 11, 20, 32, 17, 36], [24, 6, 0, 2, 26, 12, 21, 33, 18], [10, 25, 2, 0, 7, 27, 13, 22, 34], [19, 11, 26, 7, 0, 3, 28, 14, 23], [31, 20, 12, 27, 3, 0, 8, 29, 15], [16, 32, 21, 13, 28, 8, 0, 4, 30], [35, 17, 33, 22, 14, 29, 4, 0, 9], [5, 36, 18, 34, 23, 15, 30, 9, 0]],
             10: [[0, 1, 21, 14, 29, 35, 40, 12, 44, 10], [1, 0, 6, 22, 15, 30, 36, 41, 11, 45], [21, 6, 0, 2, 23, 16, 31, 37, 42, 13], [14, 22, 2, 0, 7, 24, 17, 32, 38, 43], [29, 15, 23, 7, 0, 3, 25, 18, 33, 39], [35, 30, 16, 24, 3, 0, 8, 26, 19, 34], [40, 36, 31, 17, 25, 8, 0, 4, 27, 20], [12, 41, 37, 32, 18, 26, 4, 0, 9, 28], [44, 11, 42, 38, 33, 19, 27, 9, 0, 5], [10, 45, 13, 43, 39, 34, 20, 28, 5, 0]],
-            // 画像通りの11人・12人の正しいマトリクスデータに修正
             11: [
                 [0,  1, 30, 12, 23, 43, 49, 39, 20, 54,  6],
                 [1,  0,  7, 31, 13, 24, 44, 50, 40, 21, 55],
@@ -264,7 +283,7 @@
                 [23, 13, 32, 8,  0,  3, 34, 16, 27, 47, 48],
                 [43, 24, 14, 33, 3,  0,  9,  4, 36, 18, 29],
                 [49, 44, 25, 15, 34, 9,  0,  4, 10, 37, 19],
-                [39, 50, 45, 26, 16, 4, 36,  0,  5, 38, 38], /* 修正済み */
+                [39, 50, 45, 26, 16, 4, 36,  0,  5, 38, 38],
                 [20, 40, 51, 46, 27, 36, 10,  5,  0,  5, 11],
                 [54, 21, 41, 52, 47, 18, 37, 38,  5,  0, 11],
                 [6,  55, 22, 53, 48, 29, 19, 38, 11, 11,  0]
