@@ -3,386 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>リーグ戦対戦表</title>
+    <title>トーナメント作成ツール</title>
     <style>
-        /* ページ全体とベースの文字設定 */
-        body { font-family: sans-serif; padding: 8px; margin: 0; background-color: #fff; color: #333; }
-
-        /* 入力フォームエリアのスタイル（画面表示用・印刷時は非表示） */
-        .no-print { margin-bottom: 8px; background: #f9f9f9; padding: 10px; border-radius: 8px; }
-        h2 { margin-top: 0 !important; margin-bottom: 8px !important; font-size: 1.1em; }
-
-        /* 入力グループのスタイル */
-        .form-group { margin-bottom: 8px; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 2px; font-size: 0.9em; }
-        .form-group textarea { width: 100%; padding: 8px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; height: 200px; }
-
-        /* ボタン共通スタイル */
-        button { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; background-color: #007bff; color: white; font-weight: bold; font-size: 14px; margin-right: 5px; margin-bottom: 5px; }
-        button:disabled { background-color: #ccc; }
-
-        /* フォーム切替ボタンのスタイル（対戦順テーブルのすぐ左下） */
-        .toggle-form-btn { 
-            background-color: #343a40; 
-            color: white; 
-            font-size: 12px;
-            padding: 4px 10px;
-            margin-top: 15px;
-            margin-bottom: 15px;
-            display: inline-block;
-        }
-        .toggle-form-btn:hover { background-color: #23272b; }
-
-        /* 各ページコンテナの共通スタイル（画面用） */
-        .page { margin-bottom: 20px; }
-        .section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1px; }
-        .date-display { font-size: 0.7em; color: #666; }
-
-        /* セクションタイトルのスタイル（画面用：タイトルの下余白を詰める調整） */
-        .page h2.section-title { font-size: 11pt; margin: 0 0 1px 0 !important; }
-        .page h2.match-list-title { margin-top: 10px !important; }
-
-        /* テーブル共通のスタイル（画面用） */
-        .page table { border-collapse: collapse; width: 100%; table-layout: fixed; }
-        .page th, .page td { border: 1px solid #aaa; text-align: center; position: relative; }
-        .page th { background: #eee; }
-
-        /* 対戦順表の「赤」「白」などのヘッダーを細字にする設定 */
-        .match-list-column th { font-weight: normal; }
-
-        .name-header { overflow-wrap: break-word; word-break: break-all; line-height: 1.1; overflow: hidden; font-weight: normal; }
-        .diagonal-line { background: #eee; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%); }
+        /* 基本スタイル */
+        body { font-family: sans-serif; background: #f1f5f9; padding: 10px; margin: 0; }
+        .main-container { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .panel { background: #fff; padding: 15px; border-radius: 12px; width: 95%; max-width: 500px; }
+        h2 { margin: 0 0 10px 0; font-size: 1.2rem; color: #333; text-align: left; }
+        select, textarea { width: 100%; font-size: 18px; padding: 10px; box-sizing: border-box; }
+        textarea { height: 350px; margin: 10px 0; resize: vertical; }
+        .button-group { display: flex; gap: 10px; }
+        button { flex: 1; padding: 12px; cursor: pointer; font-size: 18px; border-radius: 8px; border: none; color: white; font-weight: bold; }
+        .btn-apply { background-color: #2ecc71; }
+        .btn-print { background-color: #3498db; }
+        .svg-container { background: #fff; padding: 10px; border-radius: 12px; width: 95%; overflow: hidden; display: flex; justify-content: center; }
         
-        .match-list-column .match-num-col { width: 24px; }
-        .match-list-column td:first-child { width: 24px; }
+        /* 印刷用日付：画面上は隠す */
+        #print-date { display: none; }
 
-        .match-num { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #888; text-align: center; width: 100%; pointer-events: none; font-size: 10px; }
-        
-        .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; }
-        .print-col-1 { min-width: 50%; max-width: 50%; }
-        .print-col-2 { min-width: 44%; flex: 1; }
-        .print-col-3 { min-width: 31%; max-width: 32%; flex: 1; }
-
-        .match-list-container table th,
-        .match-list-container table td {
-            height: 19px;
-            font-size: 9px;
-            padding: 0;
-        }
-
-        .print-only { display: none; }
-        .print-date { display: none; } /* 画面では非表示 */
-
-        /* ==========================================
-            通常画面プレビュー用の高さ・フォントサイズ調整
-           ========================================== */
-        .page[data-n="7"] table th, .page[data-n="7"] table td,
-        .page[data-n="8"] table th, .page[data-n="8"] table td,
-        .page[data-n="9"] table th, .page[data-n="9"] table td,
-        .page[data-n="10"] table th, .page[data-n="10"] table td,
-        .page[data-n="11"] table th, .page[data-n="11"] table td,
-        .page[data-n="12"] table th, .page[data-n="12"] table td { height: 18px; font-size: 8px; padding: 0; }
-
-        .page[data-n="3"] table th, .page[data-n="3"] table td,
-        .page[data-n="4"] table th, .page[data-n="4"] table td,
-        .page[data-n="5"] table th, .page[data-n="5"] table td,
-        .page[data-n="6"] table th, .page[data-n="6"] table td {
-            height: 30px;
-            font-size: 11px;
-            padding: 1px;
-        }
-
-        .page[data-n="3"] .match-list-column table th, .page[data-n="3"] .match-list-column table td,
-        .page[data-n="4"] .match-list-column table th, .page[data-n="4"] .match-list-column table td,
-        .page[data-n="5"] .match-list-column table th, .page[data-n="5"] .match-list-column table td,
-        .page[data-n="6"] .match-list-column table th, .page[data-n="6"] .match-list-column table td,
-        .page[data-n="7"] .match-list-column table th, .page[data-n="7"] .match-list-column table td {
-            height: 30px;
-            font-size: 12px;
-        }
-
-        .page[data-n="8"] .match-list-column table th, 
-        .page[data-n="8"] .match-list-column table td {
-            height: 25px;
-        }
-
-        .page[data-n="9"] .match-list-column table th, 
-        .page[data-n="9"] .match-list-column table td { 
-            height: 30px; 
-            font-size: 9px; 
-        }
-
-        .page[data-n="10"] .match-list-column table th, 
-        .page[data-n="10"] .match-list-column table td,
-        .page[data-n="11"] .match-list-column table th,
-        .page[data-n="11"] .match-list-column table td,
-        .page[data-n="12"] .match-list-column table th,
-        .page[data-n="12"] .match-list-column table td { 
-            height: 20px; 
-            font-size: 8px; 
-        }
-
-
-        /* ==========================================
-            完全独立した実際の印刷時の設定（@media print）
-           ========================================== */
         @media print {
-            .no-print, .toggle-form-btn { display: none !important; }
-            
-            @page { size: A4 portrait; margin: 2mm 5mm 1mm 5mm; }
-
-            .page {
-                margin-top: 0 !important;
-                margin-bottom: 0 !important;
-                position: relative !important;
+            @page { size: A4 landscape; margin: 10mm; }
+            body { 
+                background: white; 
+                margin: 0; 
+                padding: 0; 
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end; /* 印刷時に下側に寄せる */
             }
-
-            .section-header { position: relative !important; }
-            .date-display { display: none !important; }
-
-            /* 印刷時：対戦表テーブルの右端の延長上に日付を配置 */
-            .print-date {
+            .panel { display: none !important; }
+            #print-date {
                 display: block !important;
-                position: absolute !important;
-                top: 3px !important;
-                font-size: 8pt !important;
-                color: #333 !important;
-                white-space: nowrap !important;
+                position: absolute;
+                top: 0;
+                right: 0;
+                font-size: 18px;
+                color: #555;
+                font-weight: normal;
             }
-
-            /* 人数ごとの表の幅に合わせて日付の右端位置を同期 */
-            .page[data-n="3"] .print-date { left: 50% !important; transform: translateX(-100%); }
-            .page[data-n="4"] .print-date { left: 60% !important; transform: translateX(-100%); }
-            .page[data-n="5"] .print-date { left: 70% !important; transform: translateX(-100%); }
-            .page[data-n="6"] .print-date { left: 80% !important; transform: translateX(-100%); }
-            .page[data-n="7"] .print-date { left: 90% !important; transform: translateX(-100%); }
-            .page[data-n="8"] .print-date { left: 95% !important; transform: translateX(-100%); }
-            .page[data-n="9"] .print-date { right: 0 !important; }
-            .page[data-n="10"] .print-date { right: 0 !important; }
-            .page[data-n="11"] .print-date { right: 0 !important; }
-            .page[data-n="12"] .print-date { right: 0 !important; }
-
-            .page h2.section-title { 
-                font-size: 9pt !important; 
-                margin-top: 3px !important; 
-                margin-bottom: 0px !important; 
+            .svg-container { 
+                display: block !important; 
+                width: 100% !important; 
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                background: none !important;
             }
-
-            .page h2.match-list-title {
-                font-size: 9pt !important; 
-                margin-top: 12px !important; 
-                margin-bottom: 3px !important;
+            #tournament-svg { 
+                display: block !important; 
+                width: 100% !important; 
+                height: auto !important;
             }
-            .page[data-n="11"] h2.match-list-title,
-            .page[data-n="12"] h2.match-list-title {
-                margin-top: 8px !important;
-            }
-            
-            .page table td .match-num { 
-                position: absolute !important;
-                top: 2px !important; 
-                left: 3px !important; 
-                transform: none !important; 
-                text-align: left !important; 
-                width: auto !important; 
-                font-size: 6px !important; 
-                color: #666 !important; 
-            }
-            
-            .page table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .page table { border-collapse: separate !important; border-spacing: 0 !important; border-left: 1px solid #333; border-top: 1px solid #333; width: 100% !important; }
-            
-            /* 通常の行高さ */
-            .page table th, .page table td { border: 0 !important; border-right: 1px solid #333 !important; border-bottom: 1px solid #333 !important; height: 37px !important; font-size: 11px !important; }
-            
-            /* 11人・12人印刷時の対戦表の行高さ（33px） */
-            .page[data-n="11"] table th, .page[data-n="11"] table td,
-            .page[data-n="12"] table th, .page[data-n="12"] table td {
-                height: 33px !important;
-                font-size: 9px !important;
-            }
-            
-            .page[data-n="9"] .match-list-column table th, 
-            .page[data-n="9"] .match-list-column table td { height: 32px !important; font-size: 12px !important; }
-            .page[data-n="9"] .match-list-column td:first-child { font-size: 10px !important; width: 15px !important; }
-
-            /* 11人の対戦順リスト側の高さ（25px） */
-            .page[data-n="11"] .match-list-column table th, 
-            .page[data-n="11"] .match-list-column table td { 
-                height: 25px !important; 
-                font-size: 8px !important; 
-            }
-
-            /* 12人の対戦順リスト側の高さ（23px） */
-            .page[data-n="12"] .match-list-column table th, 
-            .page[data-n="12"] .match-list-column table td { 
-                height: 20px !important; 
-                font-size: 8px !important; 
-            }
-            
-            .page[data-n="10"] .match-list-column td:first-child,
-            .page[data-n="11"] .match-list-column td:first-child,
-            .page[data-n="12"] .match-list-column td:first-child { font-size: 8px !important; width: 14px !important; }
-
-            .match-list-column table th, .match-list-column table td { height: 32px !important; font-size: 14px !important; }
-            .match-list-column td:first-child { font-size: 12px !important; width: 30px !important; }
-
-            .match-list-column .match-num-col { width: 30px !important; }
-            
-            .page[data-n="3"] table { width: 50% !important; }
-            .page[data-n="4"] table { width: 60% !important; }
-            .page[data-n="5"] table { width: 70% !important; }
-            .page[data-n="6"] table { width: 80% !important; }
-            .page[data-n="7"] table { width: 90% !important; }
-            .page[data-n="8"] table { width: 95% !important; }
-            .page[data-n="9"] table { width: 100% !important; }
-            .page[data-n="10"] table { width: 100% !important; }
-            .page[data-n="11"] table { width: 100% !important; }
-            .page[data-n="12"] table { width: 100% !important; }
-
-            .print-only { display: table-cell !important; width: 20px !important; font-size: 8px !important; padding: 0 !important; }
-            .diagonal-line { background: #eee !important; background-image: linear-gradient(to top right, transparent 49%, #666 50%, #666 51%, transparent 52%) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .match-list-container { display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; }
-            .print-col-1 { min-width: 50% !important; max-width: 50% !important; }
-            .print-col-2 { min-width: 44% !important; }
-            .print-col-3 { min-width: 29% !important; }
         }
     </style>
 </head>
 <body>
-
-    <!-- 入力・操作エリア -->
-    <div id="formArea" class="no-print">
-        <h2>リーグ戦作成ツール</h2>
-        <div class="form-group">
-            <label>参加者名（3〜12人、改行区切り）</label>
-            <textarea id="names" placeholder="Aさん&#10;Bさん&#10;Cさん"></textarea>
+    <div id="print-date">2026/10/2</div>
+    <div class="main-container">
+        <div class="panel">
+            <h2>トーナメント作成ツール</h2>
+            <select id="select-count" onchange="initNames()">
+                <script>
+                    for(let i=3; i<=16; i++) {
+                        document.write(`<option value="${i}" ${i===14?'selected':''}>${i}人</option>`);
+                    }
+                </script>
+            </select>
+            <textarea id="name-area" placeholder="選手1&#10;選手2&#10;選手3..."></textarea>
+            <div class="button-group">
+                <button class="btn-apply" onclick="createTournament()">名前を反映</button>
+                <button class="btn-print" onclick="window.print()">印刷</button>
+            </div>
         </div>
-        <button onclick="generate()">表を作成</button>
-        <button id="printBtn" onclick="window.print()" disabled style="background-color: #6c757d;">印刷する</button>
+        <div class="svg-container">
+            <svg id="tournament-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
     </div>
 
-    <!-- 生成された対戦表が表示されるエリア -->
-    <div id="output"></div>
-
     <script>
-        const LEAGUE_TABLES = {
-            3: [[0, 1, 3], [1, 0, 2], [3, 2, 0]],
-            4: [[0, 1, 5, 3], [1, 0, 4, 6], [5, 4, 0, 2], [3, 6, 2, 0]],
-            5: [[0, 1, 6, 9, 3], [1, 0, 4, 7, 10], [6, 4, 0, 2, 8], [9, 7, 2, 0, 5], [3, 10, 8, 5, 0]],
-            6: [[0, 1, 12, 8, 10, 6], [1, 0, 4, 13, 7, 11], [12, 4, 0, 2, 14, 9], [8, 13, 2, 0, 5, 15], [10, 7, 14, 5, 0, 3], [6, 11, 9, 15, 3, 0]],
-            7: [[0, 1, 14, 8, 20, 12, 4], [1, 0, 5, 15, 9, 19, 13], [14, 5, 0, 2, 16, 10, 21], [8, 15, 2, 0, 6, 17, 11], [20, 9, 16, 6, 0, 3, 18], [12, 19, 10, 17, 3, 0, 7], [4, 13, 21, 11, 18, 7, 0]],
-            8: [[0, 1, 17, 12, 23, 10, 27, 8], [1, 0, 5, 18, 13, 24, 9, 28], [17, 5, 0, 2, 19, 14, 25, 11], [12, 18, 2, 0, 6, 20, 15, 26], [23, 13, 19, 6, 0, 3, 21, 16], [10, 24, 14, 20, 3, 0, 7, 22], [27, 9, 25, 15, 21, 7, 0, 4], [8, 28, 11, 26, 16, 22, 4, 0]],
-            9: [[0, 1, 24, 10, 19, 31, 16, 35, 5], [1, 0, 6, 25, 11, 20, 32, 17, 36], [24, 6, 0, 2, 26, 12, 21, 33, 18], [10, 25, 2, 0, 7, 27, 13, 22, 34], [19, 11, 26, 7, 0, 3, 28, 14, 23], [31, 20, 12, 27, 3, 0, 8, 29, 15], [16, 32, 21, 13, 28, 8, 0, 4, 30], [35, 17, 33, 22, 14, 29, 4, 0, 9], [5, 36, 18, 34, 23, 15, 30, 9, 0]],
-            10: [[0, 1, 21, 14, 29, 35, 40, 12, 44, 10], [1, 0, 6, 22, 15, 30, 36, 41, 11, 45], [21, 6, 0, 2, 23, 16, 31, 37, 42, 13], [14, 22, 2, 0, 7, 24, 17, 32, 38, 43], [29, 15, 23, 7, 0, 3, 25, 18, 33, 39], [35, 30, 16, 24, 3, 0, 8, 26, 19, 34], [40, 36, 31, 17, 25, 8, 0, 4, 27, 20], [12, 41, 37, 32, 18, 26, 4, 0, 9, 28], [44, 11, 42, 38, 33, 19, 27, 9, 0, 5], [10, 45, 13, 43, 39, 34, 20, 28, 5, 0]],
-            11: [
-                [0,  1, 30, 12, 23, 43, 49, 39, 20, 54,  6],
-                [1,  0,  7, 31, 13, 24, 44, 50, 40, 21, 55],
-                [30, 7,  0,  2, 32, 14, 25, 45, 51, 41, 22],
-                [12, 31, 2,  0,  8, 33, 15, 26, 46, 52, 53],
-                [23, 13, 32, 8,  0,  3, 34, 16, 27, 47, 48],
-                [43, 24, 14, 33, 3,  0,  9,  4, 36, 18, 29],
-                [49, 44, 25, 15, 34, 9,  0,  4, 10, 37, 19],
-                [39, 50, 45, 26, 16, 4, 36,  0,  5, 38, 38],
-                [20, 40, 51, 46, 27, 36, 10,  5,  0,  5, 11],
-                [54, 21, 41, 52, 47, 18, 37, 38,  5,  0, 11],
-                [6,  55, 22, 53, 48, 29, 19, 38, 11, 11,  0]
-            ],
-            12: [
-                [0,  1, 25, 16, 35, 43, 55, 50, 61, 14, 65, 12],
-                [1,  0,  7, 26, 17, 36, 44, 56, 51, 52, 13, 66],
-                [25, 7,  0,  2, 27, 18, 37, 45, 57, 52, 63, 15],
-                [16, 26, 2,  0,  8, 28, 19, 38, 46, 58, 53, 64],
-                [35, 17, 27, 8,  0,  3, 29, 20, 39, 47, 59, 54],
-                [43, 36, 18, 28, 3,  0,  9, 30, 21, 40, 48, 60],
-                [55, 44, 37, 19, 29, 9,  0,  4, 31, 22, 41, 49],
-                [50, 56, 45, 38, 20, 30, 4,  0, 10, 32, 23, 42],
-                [61, 51, 57, 46, 39, 21, 31, 10,  0,  5, 33, 24],
-                [14, 52, 52, 58, 47, 40, 22, 32,  5,  0, 11, 34],
-                [65, 13, 63, 53, 59, 48, 41, 23, 33, 11,  0,  6],
-                [12, 66, 15, 64, 54, 60, 49, 42, 24, 34,  6,  0]
-            ]
-        };
+        const svg = document.getElementById('tournament-svg');
+        const nameArea = document.getElementById('name-area');
+        const select = document.getElementById('select-count');
 
-        function generate() {
-            const textarea = document.getElementById('names');
-            const names = textarea.value.split('\n').map(n => n.trim()).filter(n => n !== "");
+        function initNames() { createTournament(); }
+
+        function createTournament() {
+            svg.innerHTML = "";
+            let input = nameArea.value.trim();
+            if (input === "") {
+                const n = parseInt(select.value);
+                input = Array.from({length: n}, (_, i) => "選手 " + (i + 1)).join('\n');
+            }
+            const names = input.split('\n').filter(s => s.trim() !== "");
             const n = names.length;
-            
-            if (n < 3 || n > 12) { alert("3〜12人で入力してください"); return; }
+            if (n === 0) return;
 
-            const now = new Date();
-            const dateStr = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`;
+            // 全体の高さをしっかりと持たせ、縦線をきれいに長く取る
+            let LINE_H = 75;
+            let svgHeight = 500;
+            let baseY = 380;
 
-            const matrix = LEAGUE_TABLES[n];
-            let matches = [];
-            
-            for (let i = 0; i < n; i++) {
-                for (let j = i + 1; j < n; j++) {
-                    matches.push({ p1: names[i], p2: names[j], originalNum: matrix[i][j] });
+            if (n <= 4) {
+                LINE_H = 110;
+                svgHeight = 450;
+                baseY = 320;
+            } else if (n <= 8) {
+                LINE_H = 85;
+                svgHeight = 480;
+                baseY = 350;
+            }
+
+            svg.setAttribute("viewBox", `0 0 1000 ${svgHeight}`);
+
+            const xStep = 900 / n; 
+
+            // 1. 各選手の文字描画
+            const leafNodes = names.map((name, i) => {
+                const x = 50 + i * xStep + xStep / 2;
+                for (let j = 0; j < name.length; j++) {
+                    const yPos = baseY + 20 + (j * 18); 
+                    const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    t.setAttribute("x", x); 
+                    t.setAttribute("y", yPos);
+                    t.setAttribute("text-anchor", "middle"); 
+                    t.style.fontSize = "16px";
+                    if (name[j] === 'ー') {
+                        t.textContent = 'ー'; 
+                        t.setAttribute("transform", `rotate(90, ${x}, ${yPos - 8})`);
+                    } else { 
+                        t.textContent = name[j]; 
+                    }
+                    svg.appendChild(t);
+                }
+                return { x, y: baseY, isLeaf: true };
+            });
+
+            // 2. 人数ごとの個別分割ルール
+            function getSplitIndex(count) {
+                switch(count) {
+                    case 3:  return 2; 
+                    case 4:  return 2; 
+                    case 5:  return 2; 
+                    case 6:  return 4; 
+                    case 7:  return 4; 
+                    case 8:  return 4; 
+                    case 9:  return 4; 
+                    case 10: return 6; 
+                    case 11: return 6; 
+                    case 12: return 8; 
+                    case 13: return 8; 
+                    case 14: return 8; 
+                    case 15: return 8; 
+                    case 16: return 8; 
+                    default: return Math.floor(count / 2);
                 }
             }
-            matches.sort((a, b) => a.originalNum - b.originalNum);
-            matches.forEach((m, idx) => m.num = idx + 1);
 
-            let printCols = 1;
-            if (n >= 6 && n <= 8) printCols = 2;
-            else if (n >= 9) printCols = 3;
-
-            let html = `<div class="page" data-n="${n}">` +
-                       `<div class="section-header">` +
-                       `<h2 class="section-title">対戦表（${n}人・${matches.length}試合）</h2>` +
-                       `<div class="date-display">${dateStr}</div>` +
-                       `<div class="print-date">${dateStr}</div>` +
-                       `</div>` +
-                       `<table><tr><th></th>`;
-            names.forEach(name => html += `<th class="name-header">${name}</th>`);
-            html += `<th class="print-only">本数</th><th class="print-only">勝</th><th class="print-only">負</th><th class="print-only">分</th><th class="print-only">順位</th></tr>`;
-
-            for (let i = 0; i < n; i++) {
-                html += `<tr><th class="name-header">${names[i]}</th>`;
-                for (let j = 0; j < n; j++) {
-                    const match = matches.find(m => (m.p1 === names[i] && m.p2 === names[j]) || (m.p1 === names[j] && m.p2 === names[i]));
-                    html += (i === j) ? `<td class="diagonal-line"></td>` : `<td><span class="match-num">${match ? match.num : ""}</span></td>`;
+            function buildTree(list) {
+                if (list.length === 1) return list[0];
+                if (list.length === 2) {
+                    return { left: list[0], right: list[1] };
                 }
-                html += `<td class="print-only"></td><td class="print-only"></td><td class="print-only"></td><td class="print-only"></td><td class="print-only"></td></tr>`;
-            }
-            
-            html += `</table>` +
-                    `<h2 class="section-title match-list-title">対戦順</h2>` +
-                    `<div class="match-list-container">`;
 
-            const printColClass = `print-col-${printCols}`;
-            const matchesPerCol = Math.ceil(matches.length / printCols);
+                const count = list.length;
+                const mid = getSplitIndex(count);
 
-            for (let c = 0; c < printCols; c++) {
-                html += `<div class="match-list-column ${printColClass}"><table><tr><th class="match-num-col"></th><th>赤</th><th>白</th></tr>`;
-                const colMatches = matches.slice(c * matchesPerCol, (c + 1) * matchesPerCol);
-                colMatches.forEach(m => html += `<tr><td>${m.num}</td><td>${m.p1}</td><td>${m.p2}</td></tr>`);
-                html += `</table></div>`;
+                return {
+                    left: buildTree(list.slice(0, mid)),
+                    right: buildTree(list.slice(mid))
+                };
             }
 
-            html += `</div>` +
-                    `<button id="toggleBtn" class="toggle-form-btn" onclick="toggleForm()">入力フォームを隠す</button>` +
-                    `</div>`;
+            const treeStructure = buildTree(leafNodes);
 
-            document.getElementById('output').innerHTML = html;
-            document.getElementById('printBtn').disabled = false;
-            document.getElementById('printBtn').style.backgroundColor = '#28a745';
+            // 3. 各ノードの高さ（段数）を事前算出
+            function calculateHeights(node) {
+                if (node.isLeaf) {
+                    node.height = 0;
+                    return 0;
+                }
+                const hL = calculateHeights(node.left);
+                const hR = calculateHeights(node.right);
+                node.height = Math.max(hL, hR) + 1;
+                return node.height;
+            }
+            calculateHeights(treeStructure);
+
+            // 4. 線を描画
+            function drawTree(node) {
+                if (node.isLeaf) return node;
+
+                const leftRes = drawTree(node.left);
+                const rightRes = drawTree(node.right);
+
+                const joinY = baseY - (node.height * LINE_H);
+
+                line(leftRes.x, leftRes.y, leftRes.x, joinY);
+                line(rightRes.x, rightRes.y, rightRes.x, joinY);
+                line(leftRes.x, joinY, rightRes.x, joinY);
+
+                const parentX = (leftRes.x + rightRes.x) / 2;
+                return { x: parentX, y: joinY };
+            }
+
+            const root = drawTree(treeStructure);
+
+            // 優勝線
+            if (root) {
+                line(root.x, root.y, root.x, root.y - 25);
+            }
         }
 
-        // 入力フォームの表示・非表示を切り替える関数
-        function toggleForm() {
-            const formArea = document.getElementById('formArea');
-            const btn = document.getElementById('toggleBtn');
-            if (formArea.style.display === 'none') {
-                formArea.style.display = 'block';
-                btn.textContent = '入力フォームを隠す';
-            } else {
-                formArea.style.display = 'none';
-                btn.textContent = '入力フォームを表示する';
-            }
+        function line(x1, y1, x2, y2) {
+            const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            l.setAttribute("stroke", "black"); 
+            l.setAttribute("stroke-width", "2");
+            l.setAttribute("x1", x1); 
+            l.setAttribute("y1", y1);
+            l.setAttribute("x2", x2); 
+            l.setAttribute("y2", y2);
+            svg.appendChild(l);
         }
+
+        window.onload = initNames;
     </script>
 </body>
 </html>
